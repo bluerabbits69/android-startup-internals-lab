@@ -91,7 +91,7 @@
 | options | `-W`: 起動の完了（最初の表示）まで待つ。`-a`: Intent の action。`-c`: Intent の category。`-n`: 起動するコンポーネント名。`-f`: Intent のフラグ（数値）。`0x10200000` = `0x10000000`（`FLAG_ACTIVITY_NEW_TASK`）\| `0x00200000`（`FLAG_ACTIVITY_RESET_TASK_IF_NEEDED`） |
 | output | 下の「C-OP-1 の出力」を参照 |
 | effect | プロセスがないとき: 新しいプロセスができ、`dumpsys activity activities` の `topResumedActivity` が `com.example.startuplab/.MainActivity` になった。前面にあるとき: PID も前面の Activity も変わらなかった |
-| source | `adb shell am help`（`-W: wait for launch to complete (initial display)`、`<INTENT> specifications`）。フラグの値: [Intent（API リファレンス）](https://developer.android.com/reference/android/content/Intent)。ランチャーと同じかどうかは T021 で AOSP を見て書く |
+| source | `adb shell am help`（`-W: wait for launch to complete (initial display)`、`<INTENT> specifications`）。フラグの値: [Intent（API リファレンス）](https://developer.android.com/reference/android/content/Intent)。ランチャーと同じ Intent かどうか: [AOSPで確認] Launcher3 `android-16.0.0_r1`、`src/com/android/launcher3/model/data/AppInfo.java`、`makeLaunchIntent(ComponentName)`（[ソース](https://android.googlesource.com/platform/packages/apps/Launcher3/+/refs/tags/android-16.0.0_r1/src/com/android/launcher3/model/data/AppInfo.java#167)）が、同じ action・category・2つのフラグで Intent を作っている。エミュレータの `NexusLauncher` が同じかどうかと、起動までにフラグが足されるかどうかは未確認（research.md R5） |
 
 #### C-OP-1 の出力
 

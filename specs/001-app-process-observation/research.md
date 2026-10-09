@@ -117,8 +117,15 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
   - Clarifications Q4: ホーム画面のアイコンをタップしたときと同等の起動要求に揃える。
     [資料] ランチャー（Launcher3）は、アプリを起動するとき ACTION_MAIN、
     CATEGORY_LAUNCHER、コンポーネント名、上記2つのフラグを付けた Intent を送る。
-    [仮説] 上のコマンドは、それと同じ Intent になる。実装時に Launcher3 のソースで
-    フラグを確認し、参照したタグとファイルを記録する。
+    [AOSPで確認] 上のコマンドは、それと同じ Intent になる。Launcher3 の
+    `android-16.0.0_r1` タグ、`src/com/android/launcher3/model/data/AppInfo.java` の
+    `makeLaunchIntent(ComponentName)` が、`ACTION_MAIN`・`CATEGORY_LAUNCHER`・コンポーネント名・
+    `FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_RESET_TASK_IF_NEEDED` で Intent を作っている
+    （[ソース](https://android.googlesource.com/platform/packages/apps/Launcher3/+/refs/tags/android-16.0.0_r1/src/com/android/launcher3/model/data/AppInfo.java#167)、2026-10-09 確認）。
+    ただし次の2点は未確認:
+    (1) エミュレータで動いているランチャーは `NexusLauncher`（ソース非公開）で、AOSP の Launcher3 と同じ処理かどうか。
+    (2) Intent を作った後、`startActivity` までの間にフラグが足されるかどうか（タップから起動までの経路は追っていない）。
+    タグはエミュレータのビルド `BE2A.250530.026` と日付が最も近い最初のリリースを選んだ。ビルドとタグが厳密に対応するかは未確認。
   - `-W` は起動の完了を待ち、結果を表示する。[仮説] Android 16 では出力に
     `LaunchState`（COLD / WARM / HOT）が含まれる。プロセスが新しく作られたかを示す、
     OS 側からのもう1つの証拠になる。起動時間（TotalTime など）は対象外なので、
