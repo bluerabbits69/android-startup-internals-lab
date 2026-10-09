@@ -128,7 +128,7 @@
 - [X] T033 [US4] EXP-3 を3回行い、exp3-force-stop-relaunch.md の「観測結果」に Trial 1〜3 を書く。強制停止したときに `onDestroy` が出たかどうか、`am_proc_died` と `am_kill` が出たかどうかも、事実として記録する
 - [X] T034 [US4] 【学習者】3つの exp*.md の「考察」「仮説との照合」「確認できなかったこと・新しく出てきた疑問」「参考資料」を書く。結論には「API 36 で確認。他のバージョンは未確認」と書き添える（data-model.md の V-ER-2、FR-015）
 - [X] T035 [US4] docs/experiments/001-app-process-observation/comparison.md を作る。data-model.md §7 の列（実験、操作前の PID → 操作後の PID、Application.onCreate、Activity のイベント列、Activity の instance、OS のプロセス起動記録、試行間の差）で比較表を書く
-- [ ] T036 [US4] 【学習者】comparison.md に、Q1〜Q5 それぞれへの回答または「未確認」を、根拠にした実験と Trial の番号つきで書く（SC-006）。「Activity の起動とプロセスの生成は同じではない」ことの是非を、PID の変化と Application.onCreate が出たかどうかを根拠に説明する（SC-007）
+- [X] T036 [US4] 【学習者】comparison.md に、Q1〜Q5 それぞれへの回答または「未確認」を、根拠にした実験と Trial の番号つきで書く（SC-006）。「Activity の起動とプロセスの生成は同じではない」ことの是非を、PID の変化と Application.onCreate が出たかどうかを根拠に説明する（SC-007）
 
 **Checkpoint**: 3つの実験が記録され、比べた結果から Q1〜Q5 に答えられている
 
