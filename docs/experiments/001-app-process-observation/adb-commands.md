@@ -263,3 +263,7 @@ C-INS-2 → C-INS-1 → C-LOG-1 → C-OP-1 の後に実行した。他のアプ�
 - `instance` の値は、プロセスが違っても同じになることがある。PID 3908（S1）、4847、5131 のどれでも、
   Application は `ab43fa3`、Activity は `2937a2a` だった。`instance` で比べられるのは、同じ PID の中だけ。
   なぜ同じ値になるのかは未確認。
+- C-OP-2（HOME）の後、`onStop` が出る前に C-OP-1 で戻すと、`onPause` → `onResume` だけが出て、
+  `LaunchState: UNKNOWN (0)` になった（待ち時間 0秒・1秒）。`onStop` が出た後（待ち時間 3秒）に戻すと、
+  `onRestart` → `onStart` → `onResume` が出て、`LaunchState: HOT` になった（2026-10-09、T037 で quickstart S2 を通したときに気づいた）。
+  HOME から `onStop` までは約1.1秒かかっていた。なぜ `LaunchState` が変わるのかは未確認。

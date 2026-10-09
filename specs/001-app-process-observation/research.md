@@ -23,8 +23,7 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
     Play Store 付きイメージは `user` ビルドで root が取れない。
   - [環境で確認] API 36 のイメージは導入済みの中で最も新しい。AOSP の最新ソースと
     比べやすい。
-  - [仮説] ビルド種別（`ro.build.type`）は `userdebug` を想定する。実験前に
-    `getprop` で確認し、記録する。
+  - [環境で確認] ビルド種別（`ro.build.type`）は `userdebug`（2026-10-09、`getprop` で確認。environment.md）。
 - **Alternatives considered**:
   - `Pixel_7a`（API 36、Play Store あり）: ビルド種別が `user` のため、後続 Feature で
     観察できる範囲が狭くなる。
@@ -204,7 +203,10 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
     「初回起動」を毎回再現できる。
     [資料] インストール直後のアプリは「停止状態（stopped state）」にある。
     強制停止した後と、OS から見た状態が近いかもしれない。
-    [仮説] それでも Experiment 1 と 3 で観測結果に違いが出るか、出ないかを記録する。
+    [環境で確認] インストール直後も強制停止の後も、`dumpsys package` は `stopped=true` だった（adb-commands.md の C-INS-1、C-OP-3）。
+    Experiment 1 と 3 の起動のとき、本アプリのログ（Application.onCreate → Activity.onCreate → onStart → onResume）、
+    `LaunchState: COLD`、`am_proc_start` / `Start proc` に違いはなかった（exp1・exp3 の Trial 1〜3）。
+    違ったのは、Experiment 1 では再インストールのたびに UID が変わったことだけ（原因は未確認）。
   - バックグラウンドで待つ時間を決めておかないと、試行ごとに条件がばらつく
     （clarify の Outstanding 項目を解消）。30秒は、操作の直後に起きる変化を
     見逃さない程度の長さとして選んだ。OS がプロセスを回収するかどうかを確かめる
