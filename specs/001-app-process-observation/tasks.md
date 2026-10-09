@@ -141,7 +141,7 @@
 - [X] T037 quickstart.md の S1〜S5 を最初から最後まで通しで行い、すべての期待される結果を満たすことを確かめる。満たさないものがあれば、関係するタスクに戻って直す
 - [X] T038 [P] specs/001-app-process-observation/research.md と plan.md を見直して、[仮説] が残っていないことを確かめる。残っているものは、すべて [環境で確認]、[AOSPで確認]、「誤り（正しくは〜）」、「未確認（理由）」のどれかに書き換える
 - [X] T039 [P] spec の SC-001〜SC-007 が一つずつ満たされているかを確かめ、結果を docs/experiments/001-app-process-observation/comparison.md の末尾に「達成状況」として書く
-- [ ] T040 【学習者】docs/experiments/001-app-process-observation/comparison.md に「振り返り」と「後続 Feature の候補」を書く。候補には、少なくとも spec と research で後回しにしたもの（起動要求の形による違い、`am kill` との比較、「アクティビティを保持しない」をオンにした場合、バージョン間の比較、`attachBaseContext` と ContentProvider の初期化順序、AMS/ATMS/Zygote の内部）と、実験で新しく出てきた疑問を含める（Constitution VI）
+- [X] T040 【学習者】docs/experiments/001-app-process-observation/comparison.md に「振り返り」と「後続 Feature の候補」を書く。候補には、少なくとも spec と research で後回しにしたもの（起動要求の形による違い、`am kill` との比較、「アクティビティを保持しない」をオンにした場合、バージョン間の比較、`attachBaseContext` と ContentProvider の初期化順序、AMS/ATMS/Zygote の内部）と、実験で新しく出てきた疑問を含める（Constitution VI）
 
 ---
 

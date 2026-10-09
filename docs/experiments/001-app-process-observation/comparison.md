@@ -59,11 +59,39 @@ Application の寿命はプロセスと一緒で、Activity はその中で生�
 
 ## 振り返り
 
-（T040 で書く）
+学習者の振り返り（2026-10-09、T040）。
+
+- **コールドスタート・ホットスタート・ウォームスタートについて知れたのが良かった。**
+  最初の仮説にはなかった観点。`am start -W` の `LaunchState`（COLD / HOT）を観測し、自分で見つけた資料
+  （[アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja)）の定義と結びつけられた。
+- **force-stop では、本当に即座にプロセスが kill されて、onPause や onStop も呼ばれていなかった。**
+  唯一外れた仮説（onDestroy は呼ばれる）から得た学び。`Force stopping` から `Killing` まで 1〜4ms で、
+  その間に本アプリのログが出なかった（ログからの判断。EXP-3 Trial 1〜3）。
+
+残っていること: 学習者が自分の手で実験を再現すること（上の「達成状況」の SC-001）。
 
 ## 後続 Feature の候補
 
-（T040 で書く）
+**spec と research で後回しにしたもの**
+
+- 起動要求の形による違い（`am start -n` だけ、`monkey` など。Clarifications Q4）
+- `am kill`（バックグラウンドのプロセスだけを終了する）と force-stop の比較
+- 「アクティビティを保持しない」をオンにした場合（Clarifications Q3）。`LaunchState: WARM` を観測できるか
+- Android のバージョン間の比較（今回は API 36 だけ）
+- `attachBaseContext` と ContentProvider の初期化順序（Application の内部の初期化順序）
+- AMS / ATMS / Zygote の内部（親プロセス `zygote64` は記録しただけ）
+
+**実験で新しく出てきた疑問**
+
+- コールバックを呼び出しているのは誰か（EXP-1 の仮説4。`ActivityThread` などを AOSP で読む）
+- force-stop のとき、OS は本当にコールバックを呼ばずに kill しているのか（AOSP の force-stop の処理を読む）
+- force-stop で `am_kill` は出るのに、`am_proc_died` が出ないのはなぜか
+- `Force stopping ... from pid` の PID はどのプロセスか
+- HOME の後 `onStop` が出る前に戻すと、`onPause` → `onResume` だけで、`LaunchState` が `UNKNOWN (0)` になるのはなぜか（T037 で発見）
+- 再インストールのたびに UID が変わるのはなぜか（学習者が気になった点）
+- `instance` の値が、プロセスをまたいでも同じになるのはなぜか
+- バックグラウンドに長くいると、OS はいつプロセスを終了させるのか（Q3 の未確認部分）
+- エミュレータのランチャー（NexusLauncher）が、AOSP の Launcher3 と同じ Intent で起動しているか
 
 ## 達成状況
 
