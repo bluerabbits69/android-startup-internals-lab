@@ -69,7 +69,7 @@
 - [X] T015 [P] [US1] app/src/main/java/com/example/startuplab/MainActivity.kt で、`onCreate`, `onStart`, `onResume`, `onPause`, `onStop`, `onRestart`, `onDestroy` の7つをオーバーライドする。それぞれ `super` を呼んだ直後に `logLifecycle("Activity", "<メソッド名>", this)` を呼ぶ（contracts/log-format.md の「出力するタイミング」に従う）
 - [X] T016 [US1] ビルドしてインストールし（C-INS-1）、quickstart.md の S1 を実行する。logcat の PID 列と `pid=` が一致すること（data-model.md の V-LE-1: 「`logcatPid == pid` でなければならない」）を確かめる。一致しなければ T008 を直す
 - [X] T017 [US1] アプリを前面に出したまま C-OP-2（HOME）を実行し、`adb logcat -d -v threadtime -s StartupLab:I` で Activity の `onPause` と `onStop` が出ることを確かめる（US1 の受け入れシナリオ3）
-- [ ] T018 [US1] 【学習者】app/src/main/java/com/example/startuplab/ の3つのファイルについて、役割と、各コールバックが「いつ・誰から」呼ばれると今の時点で考えているかを説明できることを確かめる（Constitution I）。その予想は、後で exp*.md の仮説の欄に使う
+- [X] T018 [US1] 【学習者】app/src/main/java/com/example/startuplab/ の3つのファイルについて、役割と、各コールバックが「いつ・誰から」呼ばれると今の時点で考えているかを説明できることを確かめる（Constitution I）。その予想は、後で exp*.md の仮説の欄に使う
 
 **Checkpoint**: Logcat でライフサイクルを観察できる。US1 はここで単体で完了する（MVP）
 
@@ -120,9 +120,9 @@
 
 > 実験を行う前に、仮説を書いて確定させておくこと（後から仮説を書き換えない。Constitution II）
 
-- [ ] T028 [P] [US4] 【学習者】contracts/experiment-record-template.md をもとに docs/experiments/001-app-process-observation/exp1-first-launch.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-INS-2（uninstall）→ C-INS-1（install）→ C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-LOG-1 → C-PS-1（step=`before`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-launch`）→ C-LOG-3（research R7）
-- [ ] T029 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp2-background-return.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-OP-3 → C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-2 → C-PS-1（step=`after-home`）→ **30秒待つ** → C-PS-1（step=`after-home+30s`）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-return`）→ C-LOG-3（research R7）
-- [ ] T030 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp3-force-stop-relaunch.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-3 → C-PS-1（step=`after-force-stop`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-relaunch`）→ C-LOG-3（research R7）
+- [X] T028 [P] [US4] 【学習者】contracts/experiment-record-template.md をもとに docs/experiments/001-app-process-observation/exp1-first-launch.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-INS-2（uninstall）→ C-INS-1（install）→ C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-LOG-1 → C-PS-1（step=`before`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-launch`）→ C-LOG-3（research R7）
+- [X] T029 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp2-background-return.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-OP-3 → C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-2 → C-PS-1（step=`after-home`）→ **30秒待つ** → C-PS-1（step=`after-home+30s`）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-return`）→ C-LOG-3（research R7）
+- [X] T030 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp3-force-stop-relaunch.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-3 → C-PS-1（step=`after-force-stop`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-relaunch`）→ C-LOG-3（research R7）
 - [ ] T031 [US4] EXP-1 を3回行い、exp1-first-launch.md の「観測結果」に Trial 1〜3 を書く。ログは contracts/log-format.md の照合ルールを通してから貼る。除いた行は「照合ルールで除いた行」に残す。OS の記録は原文のまま書く（data-model.md の V-OS-1: 「原文は手を加えずに貼り付ける。解釈は『考察』の欄にだけ書く」）。試行間で違いがあれば「試行間の差」に書く
 - [ ] T032 [US4] EXP-2 を3回行い、exp2-background-return.md の「観測結果」に Trial 1〜3 を書く。復帰の前後で Activity の `instance` が同じかどうか、`Application onCreate` が出たかどうかを、事実として記録する。ホームにいる間にプロセスが消えていた場合は、spec の Edge Cases に従って「別のケース」として記録する
 - [ ] T033 [US4] EXP-3 を3回行い、exp3-force-stop-relaunch.md の「観測結果」に Trial 1〜3 を書く。強制停止したときに `onDestroy` が出たかどうか、`am_proc_died` と `am_kill` が出たかどうかも、事実として記録する
