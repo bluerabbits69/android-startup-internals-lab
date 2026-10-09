@@ -46,7 +46,7 @@ UI は最小限にする。実験の自動化スクリプトは作らない（Co
 | 原則 | ゲート | 判定（Phase 0 前） | 判定（Phase 1 後） |
 |------|--------|-------------------|-------------------|
 | I. Understanding First | 学習に関係のない機能がない／書いたコードを説明できる規模か | ✅ 機能はログ出力と最小限の表示だけ | ✅ ソースは3ファイル程度。どのクラスも役割を1行で説明できる |
-| II. Evidence-Based | 事実・資料・推測を分けているか／根拠のない説明がないか | ✅ spec でそう決めている | ✅ research.md で [確認済]/[資料]/[仮説] を付けて区別。テンプレートで観測結果と考察を別の見出しにしている |
+| II. Evidence-Based | 事実・資料・推測を分けているか／根拠のない説明がないか | ✅ spec でそう決めている | ✅ research.md で [環境で確認]/[AOSPで確認]/[資料]/[仮説] を付けて区別。テンプレートで観測結果・ソースコードで確認した事実・考察を別の見出しにしている |
 | III. Source Code as Evidence | バージョンと AOSP の参照先を書いているか | ✅ API 36 に固定 | ✅ fingerprint と AOSP タグを記録する（R1）。OS ログを出しているソースのパスを書いた（R6） |
 | IV. Reproducible | 7項目と環境を記録するか／第三者が再現できるか | ✅ spec の FR-011〜013 | ✅ コマンドを ID 付きで固定（contracts/adb-commands.md）。Gradle Wrapper でビルドを固定。開始状態を作る手順を決めた（R7） |
 | V. Minimal Implementation | 依存・抽象化・UI は最小限か | ✅ | ✅ 依存ゼロ。抽象化はログを出す関数1つだけ（形式を揃えるため。下を参照） |
@@ -105,7 +105,7 @@ docs/experiments/001-app-process-observation/
 └── comparison.md
 ```
 
-**Structure Decision**: Gradle プロジェクトはリポジトリのルートに置き、モジュールは `app` の1つだけにする。
+**Structure Decision**: Gradle プロジェクトはプロジェクトルート（`android-startup-internals-lab/`。git のルートはその1つ上）に置き、モジュールは `app` の1つだけにする。
 後続 Feature で観察用のアプリが増えたら、モジュールを追加して対応する。
 実験記録は、仕様（`specs/`）とは分けて `docs/experiments/<feature>/` に置く。
 仕様は「何をするか」、記録は「何が観測されたか」で、目的が違うため。

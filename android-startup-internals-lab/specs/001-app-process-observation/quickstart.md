@@ -13,7 +13,7 @@
 
 - Android SDK（platform-tools, emulator）と JDK 17 が入っていること
 - AVD `Pixel_5_API_36` があること
-- 以降のコマンドは、リポジトリのルート（`android-startup-internals-lab/`）で実行する
+- 以降のコマンドは、プロジェクトルート（`android-startup-internals-lab/`。git のルートはその1つ上）で実行する
 
 ```sh
 PKG=com.example.startuplab
@@ -37,7 +37,7 @@ adb shell getprop ro.build.version.sdk                      # C-ENV-2
 adb shell settings get global always_finish_activities      # C-ENV-3
 ```
 
-**期待される結果**: `36` と `0`。`0` 以外なら設定をオフに戻してから進む。
+**期待される結果**: `36` と `0`。`0` 以外なら C-ENV-4（`adb shell settings put global always_finish_activities 0`）を実行してから進む。
 
 ## 3. 動作確認シナリオ
 

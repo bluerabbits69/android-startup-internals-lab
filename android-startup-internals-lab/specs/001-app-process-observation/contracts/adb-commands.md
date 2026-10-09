@@ -17,6 +17,7 @@
 | C-ENV-1 | `adb devices -l` | 接続している端末（エミュレータ）を特定する |
 | C-ENV-2 | `adb shell getprop ro.build.version.release` / `ro.build.version.sdk` / `ro.build.fingerprint` / `ro.build.type` / `ro.product.model` / `ro.product.cpu.abi` | 実験環境を記録する（FR-013） |
 | C-ENV-3 | `adb shell settings get global always_finish_activities` | 「アクティビティを保持しない」がオフ（`0`）であることを確かめる |
+| C-ENV-4 | `adb shell settings put global always_finish_activities 0` | 設定をオフに戻す。C-ENV-3 の値が `0` 以外だったときだけ使い、使ったことを記録してその試行をやり直す |
 
 ## インストール
 

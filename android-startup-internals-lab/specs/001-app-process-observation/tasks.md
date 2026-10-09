@@ -19,7 +19,7 @@
 
 ## Path Conventions
 
-- リポジトリのルート = `android-startup-internals-lab/`（`.specify/` や `specs/` があるディレクトリ）
+- プロジェクトルート = `android-startup-internals-lab/`（`.specify/` や `specs/` があるディレクトリ。git のルートはその1つ上）
 - アプリのソース: `app/src/main/java/com/example/startuplab/`
 - 実験記録: `docs/experiments/001-app-process-observation/`
 - パッケージ名: `com.example.startuplab`。ログのタグ: `StartupLab`
@@ -83,11 +83,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] docs/experiments/001-app-process-observation/adb-commands.md を作る。contracts/adb-commands.md のコマンド ID（C-ENV-1〜3, C-INS-1〜2, C-OP-1〜3, C-PS-1〜2, C-LOG-1〜3）ごとに見出しを立て、data-model.md §4 の欄（command, purpose, options, output, effect, source）を空欄で用意する
+- [ ] T019 [US2] docs/experiments/001-app-process-observation/adb-commands.md を作る。contracts/adb-commands.md のコマンド ID（C-ENV-1〜4, C-INS-1〜2, C-OP-1〜3, C-PS-1〜2, C-LOG-1〜3）ごとに見出しを立て、data-model.md §4 の欄（command, purpose, options, output, effect, source）を空欄で用意する
 - [ ] T020 [US2] C-OP-1（`am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n com.example.startuplab/.MainActivity`）を、プロセスがない状態とある状態でそれぞれ実行する。出力（`Status`、`LaunchState`、`Activity` など）と端末の変化を、adb-commands.md の C-OP-1 に原文のまま書く
-- [ ] T021 [US2] research.md R5 の [仮説]「ランチャー（Launcher3）は ACTION_MAIN、CATEGORY_LAUNCHER、`FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_RESET_TASK_IF_NEEDED` を付けた Intent で起動する」を、AOSP の Launcher3（Android 16 系のタグ）のソースで確かめる。参照したタグ・ファイル・メソッドを adb-commands.md の C-OP-1 の source 欄に書き、research.md R5 の該当箇所を [確認済] か「誤り（正しくは〜）」に書き換える
+- [ ] T021 [US2] research.md R5 の [仮説]「ランチャー（Launcher3）は ACTION_MAIN、CATEGORY_LAUNCHER、`FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_RESET_TASK_IF_NEEDED` を付けた Intent で起動する」を、AOSP の Launcher3（Android 16 系のタグ）のソースで確かめる。参照したタグ・ファイル・メソッド・ソースコードの URL（タグを含む固定リンク。cs.android.com または android.googlesource.com）を adb-commands.md の C-OP-1 の source 欄に書き、research.md R5 の該当箇所を [AOSPで確認] か「誤り（正しくは〜）」に書き換える（Constitution III）
 - [ ] T022 [US2] C-OP-2（HOME）と C-OP-3（force-stop）を実行し、出力と端末の変化を adb-commands.md に書く。C-OP-3 の後には C-PS-1 でプロセスが消えたことを確かめて、それも書く
-- [ ] T023 [US2] C-ENV-1〜3、C-INS-1〜2、C-LOG-1〜3 を実行し、出力の例と端末の変化を adb-commands.md に書く。各オプション（`-d`, `-v threadtime`, `-b`, `-s`, `-r` など）の意味は、`adb help` と `adb logcat --help` を根拠にする
+- [ ] T023 [US2] C-ENV-1〜4、C-INS-1〜2、C-LOG-1〜3 を実行し、出力の例と端末の変化を adb-commands.md に書く。各オプション（`-d`, `-v threadtime`, `-b`, `-s`, `-r` など）の意味は、`adb help` と `adb logcat --help` を根拠にする
 - [ ] T024 [US2] 【学習者】adb-commands.md のすべてのコマンドの purpose 欄（OS に何を頼んだか）を自分の言葉で書く。AI の下書きを使った場合は、その内容を確かめてから承認する（US2 の受け入れシナリオ4、Constitution VII）
 
 **Checkpoint**: ADB だけで操作でき、各コマンドを説明できる
@@ -103,8 +103,8 @@
 ### Implementation for User Story 3
 
 - [ ] T025 [US3] quickstart.md の S3 を実行する。C-PS-1（`pidof`）と C-PS-2（`ps -A -o PID,PPID,USER,NAME`）の出力を adb-commands.md に書く。C-PS-2 では本アプリの行に加えて、その PPID に当たる行（親プロセスの名前）も原文で書く。親プロセスの名前は記録するだけで、Zygote の解析はしない
-- [ ] T026 [US3] quickstart.md の S4 を実行し、research.md R6 の [仮説]（API 36 で `ActivityManager` の `Start proc` 行と、events バッファの `am_proc_start` が出る）と R5 の [仮説]（`am start -W` の出力に `LaunchState` が含まれる）を予備確認する。結果（出た行の原文、または「出力なし」）を research.md R5・R6 と plan.md の「実装時に決めて追記すること」に書く
-- [ ] T027 [US3] AOSP（Android 16 系のタグ）で、`Start proc` と `am_proc_start` を出力している箇所（`frameworks/base/services/core/java/com/android/server/am/ProcessList.java` と `EventLogTags.logtags` だと予想している）を確かめる。タグ・ファイル・メソッド名を research.md R6 に書き、environment.md の aospRef を埋める。読むのは出力している箇所だけにして、AMS 全体の解析はしない（spec の対象外）
+- [ ] T026 [US3] quickstart.md の S4 を実行し、research.md R6 の [仮説]（API 36 で `ActivityManager` の `Start proc` 行と、events バッファの `am_proc_start` が出る）と R5 の [仮説]（`am start -W` の出力に `LaunchState` が含まれる）を予備確認する。結果（出た行の原文に [環境で確認] を付けたもの、または「出力なし」）を research.md R5・R6 と plan.md の「実装時に決めて追記すること」に書く
+- [ ] T027 [US3] AOSP（Android 16 系のタグ）で、`Start proc` と `am_proc_start` を出力している箇所（`frameworks/base/services/core/java/com/android/server/am/ProcessList.java` と `EventLogTags.logtags` だと予想している）を確かめる。タグ・ファイル・メソッド名・ソースコードの URL（タグを含む固定リンク。cs.android.com または android.googlesource.com）を、[AOSPで確認] を付けて research.md R6 に書き、environment.md の aospRef を埋める。読むのは出力している箇所だけにして、AMS 全体の解析はしない（spec の対象外）
 
 **Checkpoint**: PID を突き合わせる方法と、OS 側の記録が出るかどうかが確かめられている
 
@@ -120,9 +120,9 @@
 
 > 実験を行う前に、仮説を書いて確定させておくこと（後から仮説を書き換えない。Constitution II）
 
-- [ ] T028 [P] [US4] 【学習者】contracts/experiment-record-template.md をもとに docs/experiments/001-app-process-observation/exp1-first-launch.md を作り、「調査目的」「仮説」「実験手順」を書く。手順: 各 Trial で C-INS-2（uninstall）→ C-INS-1（install）→ C-ENV-3 → C-LOG-1 → C-PS-1（step=`before`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-launch`）→ C-LOG-3（research R7）
-- [ ] T029 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp2-background-return.md を作り、「調査目的」「仮説」「実験手順」を書く。手順: 各 Trial で C-OP-3 → C-ENV-3 → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-2 → C-PS-1（step=`after-home`）→ **30秒待つ** → C-PS-1（step=`after-home+30s`）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-return`）→ C-LOG-3（research R7）
-- [ ] T030 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp3-force-stop-relaunch.md を作り、「調査目的」「仮説」「実験手順」を書く。手順: 各 Trial で C-ENV-3 → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-3 → C-PS-1（step=`after-force-stop`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-relaunch`）→ C-LOG-3（research R7）
+- [ ] T028 [P] [US4] 【学習者】contracts/experiment-record-template.md をもとに docs/experiments/001-app-process-observation/exp1-first-launch.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-INS-2（uninstall）→ C-INS-1（install）→ C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-LOG-1 → C-PS-1（step=`before`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-launch`）→ C-LOG-3（research R7）
+- [ ] T029 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp2-background-return.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-OP-3 → C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-2 → C-PS-1（step=`after-home`）→ **30秒待つ** → C-PS-1（step=`after-home+30s`）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-return`）→ C-LOG-3（research R7）
+- [ ] T030 [P] [US4] 【学習者】docs/experiments/001-app-process-observation/exp3-force-stop-relaunch.md を作り、「調査目的」「仮説」「実験手順」を書く。仮説は data-model.md の参考仮説を見る前に、自分の予想として書く（I2）。手順: 各 Trial で C-ENV-3（`0` 以外なら C-ENV-4 を実行し、そのことを記録して、その試行をやり直す） → C-OP-1 → C-PS-1（step=`after-launch`）→ C-LOG-1 → C-OP-3 → C-PS-1（step=`after-force-stop`、空のはず）→ C-OP-1 → C-PS-1/C-PS-2（step=`after-relaunch`）→ C-LOG-3（research R7）
 - [ ] T031 [US4] EXP-1 を3回行い、exp1-first-launch.md の「観測結果」に Trial 1〜3 を書く。ログは contracts/log-format.md の照合ルールを通してから貼る。除いた行は「照合ルールで除いた行」に残す。OS の記録は原文のまま書く（data-model.md の V-OS-1: 「原文は手を加えずに貼り付ける。解釈は『考察』の欄にだけ書く」）。試行間で違いがあれば「試行間の差」に書く
 - [ ] T032 [US4] EXP-2 を3回行い、exp2-background-return.md の「観測結果」に Trial 1〜3 を書く。復帰の前後で Activity の `instance` が同じかどうか、`Application onCreate` が出たかどうかを、事実として記録する。ホームにいる間にプロセスが消えていた場合は、spec の Edge Cases に従って「別のケース」として記録する
 - [ ] T033 [US4] EXP-3 を3回行い、exp3-force-stop-relaunch.md の「観測結果」に Trial 1〜3 を書く。強制停止したときに `onDestroy` が出たかどうか、`am_proc_died` と `am_kill` が出たかどうかも、事実として記録する
@@ -139,7 +139,7 @@
 **Purpose**: Feature 全体を確かめて振り返る（Constitution の Development Workflow）
 
 - [ ] T037 quickstart.md の S1〜S5 を最初から最後まで通しで行い、すべての期待される結果を満たすことを確かめる。満たさないものがあれば、関係するタスクに戻って直す
-- [ ] T038 [P] specs/001-app-process-observation/research.md と plan.md を見直して、[仮説] が残っていないことを確かめる。残っているものは、すべて [確認済]、「誤り（正しくは〜）」、「未確認（理由）」のどれかに書き換える
+- [ ] T038 [P] specs/001-app-process-observation/research.md と plan.md を見直して、[仮説] が残っていないことを確かめる。残っているものは、すべて [環境で確認]、[AOSPで確認]、「誤り（正しくは〜）」、「未確認（理由）」のどれかに書き換える
 - [ ] T039 [P] spec の SC-001〜SC-007 が一つずつ満たされているかを確かめ、結果を docs/experiments/001-app-process-observation/comparison.md の末尾に「達成状況」として書く
 - [ ] T040 【学習者】docs/experiments/001-app-process-observation/comparison.md に「振り返り」と「後続 Feature の候補」を書く。候補には、少なくとも spec と research で後回しにしたもの（起動要求の形による違い、`am kill` との比較、「アクティビティを保持しない」をオンにした場合、バージョン間の比較、`attachBaseContext` と ContentProvider の初期化順序、AMS/ATMS/Zygote の内部）と、実験で新しく出てきた疑問を含める（Constitution VI）
 
