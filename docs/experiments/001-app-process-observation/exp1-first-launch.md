@@ -29,7 +29,12 @@ Application と Activity の onCreate がどの順で呼ばれるかを確かめ
 
 ### 参考仮説との違い
 
-（自分の仮説を確定させてから、data-model.md の参考仮説と比べて書く）
+（2026-10-09、自分の仮説を確定させた後に data-model.md「状態遷移」と比べた）
+
+- プロセス: 違いなし（どちらも、起動要求でプロセスが新しく作られる）
+- Activity: 参考仮説は `onCreate → onStart → onResume` まで予想している。自分の仮説は `onCreate` だけ
+  （onStart と onResume は quickstart S1 で一度出ている）
+- 参考仮説には、`Application.onCreate`（仮説2・3）と、誰が呼び出しているか（仮説4）についての記述がない
 
 ## 実験環境
 
