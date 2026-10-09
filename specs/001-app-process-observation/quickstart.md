@@ -45,7 +45,7 @@ adb shell settings get global always_finish_activities      # C-ENV-3
 
 ```sh
 adb shell am force-stop $PKG
-adb logcat -c
+adb logcat -b main,system,events -c
 adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n $PKG/.MainActivity
 adb logcat -d -v threadtime -s StartupLab:I
 ```
@@ -80,7 +80,7 @@ adb shell pidof $PKG                          # 何も出ない
 ### S4: OS 側の記録を取り出せる（FR-017）
 
 ```sh
-adb logcat -c
+adb logcat -b main,system,events -c
 adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n $PKG/.MainActivity
 adb logcat -d -v threadtime -b main,system,events -s StartupLab:I ActivityManager:I am_proc_start:I am_proc_died:I am_kill:I
 ```

@@ -43,7 +43,7 @@
 1. C-ENV-3 … `0` であることを確かめる。`0` 以外なら C-ENV-4 を実行し、そのことを記録して、この試行をやり直す
 2. C-OP-1（起動要求）… step=`launch`
 3. C-PS-1 … step=`after-launch`
-4. C-LOG-1（`adb logcat -c`）… step=`start`
+4. C-LOG-1（`adb logcat -b main,system,events -c`）… step=`start`
 5. C-OP-3（`am force-stop`）… step=`force-stop`
 6. C-PS-1 … step=`after-force-stop`（空のはず）
 7. C-OP-1（同じ起動要求で再起動）… step=`relaunch`

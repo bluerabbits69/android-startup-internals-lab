@@ -162,7 +162,7 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
     プロセスを確認 → 同じ起動コマンドで復帰。
   - **Experiment 3（強制停止後）**: 起動して前面に出す → `am force-stop` →
     プロセスがないことを確認 → 起動。
-  - 各実験は3回ずつ試行する。各試行の前に `adb logcat -c` でログバッファを空にして、
+  - 各実験は3回ずつ試行する。各試行の前に `adb logcat -b main,system,events -c` でログバッファを空にして、
     試行ごとのログの区切りにする。
   - 毎回、実験の前に `adb shell settings get global always_finish_activities` が
     `0` であることを確かめる（Clarifications Q3）。
@@ -178,6 +178,8 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
     見逃さない程度の長さとして選んだ。OS がプロセスを回収するかどうかを確かめる
     長時間の観察ではないので、それは後続 Feature で扱う。
   - `logcat -c` で区切れば、前の試行のログが混ざらない（spec Edge Cases）。
+    [環境で確認] ただし `-c` だけでは events バッファが消えない（2026-10-09）。
+    C-LOG-3 で読む main・system・events を `-b` で指定して消す。
 - **Alternatives considered**:
   - Experiment 1 の前に `am kill`（バックグラウンドのプロセスだけを終了する）:
     spec で比較を後続 Feature に回した「プロセスを終了するだけの操作」に当たるので、

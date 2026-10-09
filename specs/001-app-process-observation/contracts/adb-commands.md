@@ -45,7 +45,7 @@
 
 | ID | コマンド | 目的 |
 |----|----------|------|
-| C-LOG-1 | `adb logcat -c` | 試行を始める前にログバッファを空にする（試行の区切り） |
+| C-LOG-1 | `adb logcat -b main,system,events -c` | 試行を始める前にログバッファを空にする（試行の区切り）。C-LOG-3 で読む3つのバッファを指定する。`-c` だけでは events バッファが消えないため（2026-10-09 に確認。docs/experiments/001-app-process-observation/adb-commands.md の C-LOG-1） |
 | C-LOG-2 | `adb logcat -d -v threadtime -s StartupLab:I` | 本アプリのログを出力する |
 | C-LOG-3 | `adb logcat -d -v threadtime -b main,system,events -s StartupLab:I ActivityManager:I am_proc_start:I am_proc_died:I am_kill:I` | 本アプリのログと、OS のプロセス起動・終了の記録を時系列で出力する（FR-017） |
 

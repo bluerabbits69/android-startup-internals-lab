@@ -47,7 +47,7 @@ Application と Activity の onCreate がどの順で呼ばれるかを確かめ
 1. C-INS-2（`adb uninstall com.example.startuplab`）… step=`uninstall`
 2. C-INS-1（`adb install -r app/build/outputs/apk/debug/app-debug.apk`）… step=`install`
 3. C-ENV-3 … `0` であることを確かめる。`0` 以外なら C-ENV-4 を実行し、そのことを記録して、この試行をやり直す
-4. C-LOG-1（`adb logcat -c`）… step=`start`
+4. C-LOG-1（`adb logcat -b main,system,events -c`）… step=`start`
 5. C-PS-1 … step=`before`（空のはず）
 6. C-OP-1（ランチャーと同等の起動要求）… step=`launch`
 7. C-PS-1 / C-PS-2 … step=`after-launch`

@@ -48,7 +48,7 @@
 2. C-ENV-3 … `0` であることを確かめる。`0` 以外なら C-ENV-4 を実行し、そのことを記録して、この試行をやり直す
 3. C-OP-1（起動要求）… step=`launch`
 4. C-PS-1 … step=`after-launch`
-5. C-LOG-1（`adb logcat -c`）… step=`start`
+5. C-LOG-1（`adb logcat -b main,system,events -c`）… step=`start`
 6. C-OP-2（HOME）… step=`home`
 7. C-PS-1 … step=`after-home`
 8. **30秒待つ**
