@@ -13,7 +13,7 @@
 | abi | `arm64-v8a` | C-ENV-2 `getprop ro.product.cpu.abi` |
 | alwaysFinishActivities | `0`（下の補足を参照） | C-ENV-3 `settings get global always_finish_activities` |
 | hostTools | 下の表を参照 | |
-| aospRef | （ソースを読んだら書く） | |
+| aospRef | frameworks/base `android-16.0.0_r1`、packages/apps/Launcher3 `android-16.0.0_r1` | research.md R5・R6 |
 
 ## hostTools
 
@@ -33,3 +33,4 @@
   C-ENV-4（`settings put global always_finish_activities 0`）を実行し、もう一度 C-ENV-3 で `0` になったことを確かめた。
   この時点では実験の試行をまだ始めていないので、やり直した試行はない。
 - R1 の [仮説]「ビルド種別は `userdebug`」は、上の buildType の値で確かめられた。
+- aospRef のタグは、fingerprint のビルド `BE2A.250530.026`（2025-05-30）と日付が最も近い最初のリリースを選んだ。ビルドとタグが厳密に対応するかは未確認。

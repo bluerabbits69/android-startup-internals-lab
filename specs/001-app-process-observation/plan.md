@@ -158,6 +158,12 @@ docs/experiments/001-app-process-observation/
 - `./gradlew :app:dependencies --configuration debugRuntimeClasspath` の結果、実行時の依存は
   `org.jetbrains.kotlin:kotlin-stdlib:2.2.10` と、それが引き込む `org.jetbrains:annotations:13.0` だけ。AndroidX は入っていない
 
+**R5・R6 の [仮説] の予備確認（T021, T026, T027）**
+
+- ランチャーの Intent のフラグ: [AOSPで確認] Launcher3 の `AppInfo.makeLaunchIntent()` と一致（research.md R5。NexusLauncher が同じかは未確認）
+- `LaunchState`: [環境で確認] `am start -W` の出力に含まれる（COLD / UNKNOWN (0) を観測。research.md R5）
+- `Start proc` と `am_proc_start`: [環境で確認] API 36 で両方とも出る。[AOSPで確認] `ProcessList.handleProcessStartedLocked()` が出力している（research.md R6）
+
 ## Complexity Tracking
 
 違反はないため記載なし。

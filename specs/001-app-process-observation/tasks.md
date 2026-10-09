@@ -102,9 +102,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] quickstart.md の S3 を実行する。C-PS-1（`pidof`）と C-PS-2（`ps -A -o PID,PPID,USER,NAME`）の出力を adb-commands.md に書く。C-PS-2 では本アプリの行に加えて、その PPID に当たる行（親プロセスの名前）も原文で書く。親プロセスの名前は記録するだけで、Zygote の解析はしない
-- [ ] T026 [US3] quickstart.md の S4 を実行し、research.md R6 の [仮説]（API 36 で `ActivityManager` の `Start proc` 行と、events バッファの `am_proc_start` が出る）と R5 の [仮説]（`am start -W` の出力に `LaunchState` が含まれる）を予備確認する。結果（出た行の原文に [環境で確認] を付けたもの、または「出力なし」）を research.md R5・R6 と plan.md の「実装時に決めて追記すること」に書く
-- [ ] T027 [US3] AOSP（Android 16 系のタグ）で、`Start proc` と `am_proc_start` を出力している箇所（`frameworks/base/services/core/java/com/android/server/am/ProcessList.java` と `EventLogTags.logtags` だと予想している）を確かめる。タグ・ファイル・メソッド名・ソースコードの URL（タグを含む固定リンク。cs.android.com または android.googlesource.com）を、[AOSPで確認] を付けて research.md R6 に書き、environment.md の aospRef を埋める。読むのは出力している箇所だけにして、AMS 全体の解析はしない（spec の対象外）
+- [X] T025 [US3] quickstart.md の S3 を実行する。C-PS-1（`pidof`）と C-PS-2（`ps -A -o PID,PPID,USER,NAME`）の出力を adb-commands.md に書く。C-PS-2 では本アプリの行に加えて、その PPID に当たる行（親プロセスの名前）も原文で書く。親プロセスの名前は記録するだけで、Zygote の解析はしない
+- [X] T026 [US3] quickstart.md の S4 を実行し、research.md R6 の [仮説]（API 36 で `ActivityManager` の `Start proc` 行と、events バッファの `am_proc_start` が出る）と R5 の [仮説]（`am start -W` の出力に `LaunchState` が含まれる）を予備確認する。結果（出た行の原文に [環境で確認] を付けたもの、または「出力なし」）を research.md R5・R6 と plan.md の「実装時に決めて追記すること」に書く
+- [X] T027 [US3] AOSP（Android 16 系のタグ）で、`Start proc` と `am_proc_start` を出力している箇所（`frameworks/base/services/core/java/com/android/server/am/ProcessList.java` と `EventLogTags.logtags` だと予想している）を確かめる。タグ・ファイル・メソッド名・ソースコードの URL（タグを含む固定リンク。cs.android.com または android.googlesource.com）を、[AOSPで確認] を付けて research.md R6 に書き、environment.md の aospRef を埋める。読むのは出力している箇所だけにして、AMS 全体の解析はしない（spec の対象外）
 
 **Checkpoint**: PID を突き合わせる方法と、OS 側の記録が出るかどうかが確かめられている
 

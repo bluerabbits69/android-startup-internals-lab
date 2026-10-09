@@ -126,8 +126,9 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
     (1) エミュレータで動いているランチャーは `NexusLauncher`（ソース非公開）で、AOSP の Launcher3 と同じ処理かどうか。
     (2) Intent を作った後、`startActivity` までの間にフラグが足されるかどうか（タップから起動までの経路は追っていない）。
     タグはエミュレータのビルド `BE2A.250530.026` と日付が最も近い最初のリリースを選んだ。ビルドとタグが厳密に対応するかは未確認。
-  - `-W` は起動の完了を待ち、結果を表示する。[仮説] Android 16 では出力に
-    `LaunchState`（COLD / WARM / HOT）が含まれる。プロセスが新しく作られたかを示す、
+  - `-W` は起動の完了を待ち、結果を表示する。[環境で確認] Android 16（API 36）の出力に
+    `LaunchState` が含まれる（2026-10-09。プロセスがないとき `LaunchState: COLD`、
+    MainActivity が前面にあるとき `LaunchState: UNKNOWN (0)`。adb-commands.md の C-OP-1）。プロセスが新しく作られたかを示す、
     OS 側からのもう1つの証拠になる。起動時間（TotalTime など）は対象外なので、
     記録はするが評価しない。
   - `ps` の `PPID` 列を記録しておくと、親プロセス（zygote64 だと予想している）を
@@ -151,8 +152,32 @@ Constitution II に従い、各判断の根拠を以下の4種類に区別して
   - [資料] どちらも `ActivityManagerService` 側から出力される。
     出力しているのは `frameworks/base/services/core/java/com/android/server/am/ProcessList.java`
     で、イベントタグの定義は同じディレクトリの `EventLogTags.logtags`。
-    [仮説] Android 16 でも出力される。実験前の予備確認で実際に出ることを確かめる。
+    [環境で確認] Android 16（API 36）でも、どちらも出力される（2026-10-09、quickstart S4）。
     出なかった場合は「出力されなかった」と記録し、推測で補わない（spec Edge Cases）。
+
+    ```
+    10-09 22:27:28.840   681   741 I am_proc_start: [0,5315,10220,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+    10-09 22:27:28.841   681   741 I ActivityManager: Start proc 5315:com.example.startuplab/u0a220 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+    10-09 22:27:29.015  5315  5315 I StartupLab: source=Application event=onCreate pid=5315 instance=ab43fa3
+    ```
+
+    書き込んだプロセス（PID 681）は `system_server`（`ps` で確認）。
+  - [AOSPで確認] frameworks/base の `android-16.0.0_r1` タグで、出力している箇所を確かめた（2026-10-09）。
+    - `am_proc_start`: `ProcessList.java` の `handleProcessStartedLocked()` が
+      `EventLog.writeEvent(EventLogTags.AM_PROC_START, ...)` で出力する
+      （[ソース](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2864)）。
+      形式は `EventLogTags.logtags` の `30014 am_proc_start (User),(PID),(UID),(Process Name),(Type),(Component)`
+      （[ソース](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/EventLogTags.logtags#25)）。
+      同じファイルに `30011 am_proc_died` と `30023 am_kill` もある。
+    - `Start proc`: 同じ `handleProcessStartedLocked()` の中で、`am_proc_start` の直後に
+      `"Start proc <pid>:<processName>/<uid> for <hostingType> <hostingName>"` を組み立て
+      （[ソース](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2881)）、
+      `ActivityManagerService.reportUidInfoMessageLocked()` の `Slog.i` で出力する
+      （[ソース](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ActivityManagerService.java#3212)）。
+    - タグが `ActivityManager` になるのは、`ActivityManagerDebugConfig` で `TAG_WITH_CLASS_NAME = false`、
+      `TAG_AM = "ActivityManager"` だから（`ProcessList.TAG = TAG_WITH_CLASS_NAME ? "ProcessList" : TAG_AM`）。
+    - 観測と合っている点: 2行は同じスレッド（681/741）から、`am_proc_start` → `Start proc` の順に 1ms 差で出た。
+    - 読んだのは出力している箇所だけ。`handleProcessStartedLocked()` がいつ誰から呼ばれるかなど、AMS 全体は読んでいない（spec の対象外）。
   - 2つの経路で記録しておけば、片方が出なかったときにも判断の材料が残る。
   - ログを読むコマンド:
     `adb logcat -d -v threadtime -b main,system,events -s StartupLab:I ActivityManager:I am_proc_start:I am_proc_died:I am_kill:I`

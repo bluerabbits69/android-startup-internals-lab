@@ -166,9 +166,20 @@ Complete
 | command | `adb shell ps -A -o PID,PPID,USER,NAME` から本アプリの行と、その PPID の行を抜き出す |
 | purpose | プロセスの一覧から、アプリのプロセスとその親プロセスを調べる |
 | options | `-A`: すべてのプロセス。`-o`: 表示する列を指定する |
-| output | （T025 で書く） |
+| output | 下を参照 |
 | effect | 端末の変化はない（見るだけ） |
 | source | `adb shell ps --help`（`-A  All`、`-o  Output FIELDs instead of defaults`） |
+
+quickstart S3 で起動した直後（`pidof` は `5250`、ログの `pid=` も `5250`）。本アプリの行、その PPID の行、さらにその PPID の行を抜き出した。
+
+```
+  PID  PPID USER         NAME
+ 5250   464 u0_a220      com.example.startuplab
+  464     1 root         zygote64
+    1     0 root         init
+```
+
+親プロセスの名前は記録するだけで、Zygote の解析はしない。
 
 ## ログ
 
