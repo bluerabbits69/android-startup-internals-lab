@@ -1,5 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// AGP 9 以降は Kotlin のサポートが組み込みなので、Kotlin Android プラグインは宣言しない
 plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.compose) apply false
+    id("com.android.application") version "9.4.0" apply false
 }
