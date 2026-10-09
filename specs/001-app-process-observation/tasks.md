@@ -65,10 +65,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] app/src/main/java/com/example/startuplab/StartupLabApplication.kt の `onCreate()` で、`super.onCreate()` を呼んだ直後に `logLifecycle("Application", "onCreate", this)` を呼ぶ
-- [ ] T015 [P] [US1] app/src/main/java/com/example/startuplab/MainActivity.kt で、`onCreate`, `onStart`, `onResume`, `onPause`, `onStop`, `onRestart`, `onDestroy` の7つをオーバーライドする。それぞれ `super` を呼んだ直後に `logLifecycle("Activity", "<メソッド名>", this)` を呼ぶ（contracts/log-format.md の「出力するタイミング」に従う）
-- [ ] T016 [US1] ビルドしてインストールし（C-INS-1）、quickstart.md の S1 を実行する。logcat の PID 列と `pid=` が一致すること（data-model.md の V-LE-1: 「`logcatPid == pid` でなければならない」）を確かめる。一致しなければ T008 を直す
-- [ ] T017 [US1] アプリを前面に出したまま C-OP-2（HOME）を実行し、`adb logcat -d -v threadtime -s StartupLab:I` で Activity の `onPause` と `onStop` が出ることを確かめる（US1 の受け入れシナリオ3）
+- [X] T014 [P] [US1] app/src/main/java/com/example/startuplab/StartupLabApplication.kt の `onCreate()` で、`super.onCreate()` を呼んだ直後に `logLifecycle("Application", "onCreate", this)` を呼ぶ
+- [X] T015 [P] [US1] app/src/main/java/com/example/startuplab/MainActivity.kt で、`onCreate`, `onStart`, `onResume`, `onPause`, `onStop`, `onRestart`, `onDestroy` の7つをオーバーライドする。それぞれ `super` を呼んだ直後に `logLifecycle("Activity", "<メソッド名>", this)` を呼ぶ（contracts/log-format.md の「出力するタイミング」に従う）
+- [X] T016 [US1] ビルドしてインストールし（C-INS-1）、quickstart.md の S1 を実行する。logcat の PID 列と `pid=` が一致すること（data-model.md の V-LE-1: 「`logcatPid == pid` でなければならない」）を確かめる。一致しなければ T008 を直す
+- [X] T017 [US1] アプリを前面に出したまま C-OP-2（HOME）を実行し、`adb logcat -d -v threadtime -s StartupLab:I` で Activity の `onPause` と `onStop` が出ることを確かめる（US1 の受け入れシナリオ3）
 - [ ] T018 [US1] 【学習者】app/src/main/java/com/example/startuplab/ の3つのファイルについて、役割と、各コールバックが「いつ・誰から」呼ばれると今の時点で考えているかを説明できることを確かめる（Constitution I）。その予想は、後で exp*.md の仮説の欄に使う
 
 **Checkpoint**: Logcat でライフサイクルを観察できる。US1 はここで単体で完了する（MVP）
