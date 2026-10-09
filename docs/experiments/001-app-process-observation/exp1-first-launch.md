@@ -167,25 +167,44 @@ Application と Activity の onCreate がどの順で呼ばれるかを確かめ
 
 ## ソースコードで確認した事実
 
-（実験後に書く。読んでいなければ「なし」）
+- [AOSPで確認] `am_proc_start` と `Start proc` は、`system_server` の `ProcessList.handleProcessStartedLocked()` が、
+  プロセスの PID が決まった直後に、この順で出力している（frameworks/base `android-16.0.0_r1`、
+  [ProcessList.java#2864](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2864)、[#2881](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2881)。詳しくは research.md R6）。
 
 ## 考察
 
-（実験後に書く）
+- 初回起動では、OS（`system_server`）がプロセスを新しく作り、その PID の中で `Application.onCreate` → `Activity.onCreate`
+  → `onStart` → `onResume` の順に呼ばれたと考えられる（根拠: Trial 1〜3。`am_proc_start` / `Start proc` の PID と、
+  本アプリのログの `pid=`、`pidof` が一致。`Start proc` から `Application.onCreate` まで約0.1〜0.4秒）。
+- `LaunchState: COLD` は、プロセスを新しく作った起動で出た（根拠: Trial 1〜3）。[資料] [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja) の
+  「コールド スタートとは、アプリをゼロからスタートさせること」という定義と合っている。
+- コールバックを呼び出しているのが OS かどうかは、ログだけでは判断できない。ログから言えるのは、
+  OS がプロセスを作った後に、同じ PID の中でコールバックが呼ばれたことまで。
+
+結論: API 36 で確認。他のバージョンは未確認。
 
 ## 仮説との照合
 
 | 仮説 | 結果 | 根拠 |
 |------|------|------|
-| 1. 起動するとプロセスが新しく作られる | | |
-| 2. Application.onCreate はプロセスが新しく作られたときに呼ばれる | | |
-| 3. Application.onCreate → Activity.onCreate の順で呼ばれる | | |
-| 4. コールバックを呼び出しているのは OS | | |
+| 1. 起動するとプロセスが新しく作られる | 一致 | Trial 1〜3: before の `pidof` が空、after-launch で新しい PID。`am_proc_start` が出た |
+| 2. Application.onCreate はプロセスが新しく作られたときに呼ばれる | 一致 | Trial 1〜3: `Start proc` の後、同じ PID で `Application onCreate` が出た |
+| 3. Application.onCreate → Activity.onCreate の順で呼ばれる | 一致 | Trial 1〜3 の本アプリのログ |
+| 4. コールバックを呼び出しているのは OS | 判定できない | ログには「誰が呼んだか」が出ない。AOSP の `ActivityThread` などを読む必要がある（後続 Feature） |
 
 ## 確認できなかったこと・新しく出てきた疑問
 
-（実験後に書く）
+- コールバックを呼び出しているのは誰か（仮説4）。AOSP を読んで確かめる。
+- アンインストールして入れ直すたびに、UID が変わった（10221 → 10222 → 10223）。なぜか未確認。
+- `instance` の値が、プロセスが違っても毎回同じ（Application `ab43fa3`、Activity `2937a2a`）。なぜか未確認。
+  プロセスをまたいで `instance` を比べることはできない。
+- `LaunchState` の WARM はどんなときに出るか。[資料] [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja) によると、ウォームスタートは
+  「プロセスはまだ実行中の可能性があるが、アクティビティを `onCreate` で再作成する」場合や、「システムがメモリからアプリを削除した後に再起動し、
+  保存済みインスタンスの状態バンドルを利用できる」場合。このページの分類と `am start -W` の `LaunchState` が同じ基準かどうかは未確認。
 
 ## 参考資料
 
-（実験後に書く）
+- [ProcessList.java（android-16.0.0_r1）](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2864): `am_proc_start` と `Start proc` を出力している箇所
+- [EventLogTags.logtags（android-16.0.0_r1）](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/EventLogTags.logtags#25): `am_proc_start` の形式
+- [Launcher3 AppInfo.java（android-16.0.0_r1）](https://android.googlesource.com/platform/packages/apps/Launcher3/+/refs/tags/android-16.0.0_r1/src/com/android/launcher3/model/data/AppInfo.java#167): ランチャーが起動に使う Intent
+- [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja)（「アプリのさまざまな起動状態の理解」: コールド / ウォーム / ホットスタートの定義。学習者が見つけた資料）

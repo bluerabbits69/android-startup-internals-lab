@@ -163,25 +163,40 @@ C-LOG-1 は手順5（after-launch の後）で実行したので、最初の起�
 
 ## ソースコードで確認した事実
 
-（実験後に書く。読んでいなければ「なし」）
+なし
 
 ## 考察
 
-（実験後に書く）
+- ホームへ移動して30秒待っても、プロセスは終了しなかった（根拠: Trial 1〜3。after-launch から after-return まで同じ PID）。
+  したがって、バックグラウンドに移動してもすぐにプロセスが終了するわけではないと考えられる（Q3）。
+- 復帰したときは、プロセスも Activity も作り直されず、同じ Activity が `onRestart` → `onStart` → `onResume` で
+  再び前面に出たと考えられる（根拠: Trial 1〜3。`am_proc_start`・`Application onCreate`・`Activity onCreate` が出ず、
+  `instance` が HOME の前後で同じ。同じ PID の中なので比べられる）。
+- この結果から、Activity の起動要求とプロセスの生成は、いつも一緒に起きるわけではないと言える（Q2）。
+  `LaunchState: HOT` と、`Activity not started, its current task has been brought to the front` も同じことを示している。
+  [資料] [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja) のホットスタート「システムがアプリのホスト アクティビティをフォアグラウンドに移動」と合っている。
+
+結論: API 36 で確認。他のバージョンは未確認。
 
 ## 仮説との照合
 
 | 仮説 | 結果 | 根拠 |
 |------|------|------|
-| 1. 30秒ではプロセスは生き残る（PID は変わらない） | | |
-| 2. 復帰しても Application.onCreate は呼ばれない | | |
-| 3. Activity.onCreate は呼ばれず、onRestart → onStart → onResume の順で呼ばれる | | |
-| 4. 復帰の前後で Activity の instance は同じ | | |
+| 1. 30秒ではプロセスは生き残る（PID は変わらない） | 一致 | Trial 1〜3 の after-home / after-home+30s / after-return の `pidof` |
+| 2. 復帰しても Application.onCreate は呼ばれない | 一致 | Trial 1〜3 の本アプリのログ。`am_proc_start` も出ていない |
+| 3. Activity.onCreate は呼ばれず、onRestart → onStart → onResume の順で呼ばれる | 一致 | Trial 1〜3 の本アプリのログ |
+| 4. 復帰の前後で Activity の instance は同じ | 一致 | Trial 1〜3: HOME 前の `onPause` と復帰後の `onResume` で `instance=2937a2a` |
 
 ## 確認できなかったこと・新しく出てきた疑問
 
-（実験後に書く）
+- 30秒より長くバックグラウンドにいたら、OS はいつプロセスを終了させるのか（メモリが逼迫したときなど）。
+- 「アクティビティを保持しない」をオンにすると、プロセスは残ったまま Activity だけ作り直されるのか。
+  そのとき `LaunchState` は WARM になるのか。[資料] [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja) では、アクティビティを `onCreate` で
+  再作成する起動をウォームスタートの例に挙げている。
+- `instance` の値が、プロセスが違っても毎回同じ（Application `ab43fa3`、Activity `2937a2a`）。なぜか未確認。
+  プロセスをまたいで `instance` を比べることはできない。
 
 ## 参考資料
 
 - [アクティビティのライフサイクル](https://developer.android.com/guide/components/activities/activity-lifecycle?hl=ja)（仮説3の根拠）
+- [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja)（「アプリのさまざまな起動状態の理解」: コールド / ウォーム / ホットスタートの定義。学習者が見つけた資料）

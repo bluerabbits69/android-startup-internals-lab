@@ -191,25 +191,45 @@
 
 ## ソースコードで確認した事実
 
-（実験後に書く。読んでいなければ「なし」）
+- [AOSPで確認] `am_proc_start` と `Start proc` は、`system_server` の `ProcessList.handleProcessStartedLocked()` が、
+  プロセスの PID が決まった直後に、この順で出力している（frameworks/base `android-16.0.0_r1`、
+  [ProcessList.java#2864](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2864)、[#2881](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2881)。詳しくは research.md R6）。
 
 ## 考察
 
-（実験後に書く）
+- force-stop すると、OS はアプリのコールバック（onPause / onStop / onDestroy）を呼ぶ前に、即座にプロセスを kill しているように見える
+  （根拠: Trial 1〜3。`Force stopping` から `Killing` まで 1〜4ms で、その間に本アプリのログが出ていない。
+  OS 側には `am_kill` が出たが、`am_proc_died` は出なかった）。
+- 結論: force-stop では、コールバックは呼ばれなかったと考えられる。ただし、ログからの判断
+  （ログが出なかったことは強い証拠だが、証明ではない。AOSP の force-stop の処理を読めば確かめられる）。
+- 再起動では、EXP-1 と同じく新しいプロセスが作られ、`Application.onCreate` から呼ばれた（根拠: Trial 1〜3。
+  PID が変わり、`am_proc_start` と `LaunchState: COLD` が出た）。強制停止の後の再起動と初回起動で、
+  本アプリのログに違いは見られなかった（Q4）。[資料] [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja) は、コールドスタートが起きる例として
+  「システムがアプリを強制終了した後で起動する場合」を挙げており、観測と合っている。
+
+結論: API 36 で確認。他のバージョンは未確認。
 
 ## 仮説との照合
 
 | 仮説 | 結果 | 根拠 |
 |------|------|------|
-| 1. force-stop でプロセスは消える | | |
-| 2. force-stop で onDestroy が呼ばれる（確信度は低い） | | |
-| 3. 再起動するとプロセスが新しく作られる | | |
-| 4. Application.onCreate → Activity.onCreate の順で呼ばれる | | |
+| 1. force-stop でプロセスは消える | 一致 | Trial 1〜3: after-force-stop の `pidof` が空。`Killing` と `am_kill` が出た |
+| 2. force-stop で onDestroy が呼ばれる（確信度は低い） | 不一致 | Trial 1〜3: `onDestroy` は出なかった。`onPause` と `onStop` も出なかった |
+| 3. 再起動するとプロセスが新しく作られる | 一致 | Trial 1〜3: PID が変わり、`am_proc_start` と `LaunchState: COLD` が出た |
+| 4. Application.onCreate → Activity.onCreate の順で呼ばれる | 一致 | Trial 1〜3 の本アプリのログ |
 
 ## 確認できなかったこと・新しく出てきた疑問
 
-（実験後に書く）
+- force-stop のとき、OS は本当にコールバックを呼ばずに kill しているのか。AOSP の force-stop の処理
+  （`am force-stop` を受け取った後の流れ）を読んで確かめる。
+- force-stop では `am_kill` が出たのに、`am_proc_died` が出なかった。なぜか未確認。
+- `Force stopping ... from pid` の PID（5908 / 5968 / 6027）はどのプロセスか（`am` コマンドを実行したプロセスだと予想しているが未確認）。
+- `am kill`（バックグラウンドのプロセスだけを終了する）と比べると、何が違うのか（spec で後続 Feature に回したもの）。
+- `instance` の値が、プロセスが違っても毎回同じ（Application `ab43fa3`、Activity `2937a2a`）。なぜか未確認。
+  プロセスをまたいで `instance` を比べることはできない。
 
 ## 参考資料
 
-（実験後に書く）
+- [ProcessList.java（android-16.0.0_r1）](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/ProcessList.java#2864): `am_proc_start` と `Start proc` を出力している箇所
+- [EventLogTags.logtags（android-16.0.0_r1）](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-16.0.0_r1/services/core/java/com/android/server/am/EventLogTags.logtags#22): `am_proc_died`・`am_proc_start`・`am_kill` の形式
+- [アプリの起動時間](https://developer.android.com/topic/performance/issues/launch-time?hl=ja)（「アプリのさまざまな起動状態の理解」: コールド / ウォーム / ホットスタートの定義。学習者が見つけた資料）
