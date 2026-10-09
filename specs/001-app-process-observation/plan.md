@@ -105,7 +105,7 @@ docs/experiments/001-app-process-observation/
 └── comparison.md
 ```
 
-**Structure Decision**: Gradle プロジェクトはプロジェクトルート（`android-startup-internals-lab/`。git のルートはその1つ上）に置き、モジュールは `app` の1つだけにする。
+**Structure Decision**: Gradle プロジェクトはプロジェクトルート（`android-startup-internals-lab/`。git のルートと同じ）に置き、モジュールは `app` の1つだけにする。
 後続 Feature で観察用のアプリが増えたら、モジュールを追加して対応する。
 実験記録は、仕様（`specs/`）とは分けて `docs/experiments/<feature>/` に置く。
 仕様は「何をするか」、記録は「何が観測されたか」で、目的が違うため。
@@ -124,6 +124,39 @@ docs/experiments/001-app-process-observation/
 - AGP・Gradle・Kotlin の具体的なバージョン（R3。公式の互換表で確認して追記する）
 - `ro.build.type` と `ro.build.fingerprint` の実際の値（environment.md に書く）
 - R5 と R6 の [仮説] を予備確認した結果（ランチャーのフラグ、LaunchState、`Start proc`、`am_proc_start`）
+
+### 追記（2026-10-09 実装時）
+
+**ビルドツールのバージョン（T001）**
+
+| ツール | バージョン | 根拠 |
+|--------|-----------|------|
+| Android Gradle Plugin | 9.4.0 | [AGP リリースノート](https://developer.android.com/build/releases/gradle-plugin)。2026-09 時点の最新安定版。JDK 17 が必要で、API 37 まで対応する |
+| Gradle | 9.6.0 | 同上。AGP 9.4 の最低バージョン兼デフォルトのバージョン |
+| Kotlin | 2.2.10 | AGP 9.4.0 の組み込み Kotlin が依存するバージョン（`./gradlew buildEnvironment` で確認） |
+| SDK Build Tools | 36.0.0 | 同上。AGP 9.4 のデフォルト |
+
+- **tasks.md T003 からの変更**: [Built-in Kotlin への移行ガイド](https://developer.android.com/build/migrate-to-built-in-kotlin)によると、
+  AGP 9.0 から Kotlin のサポートが AGP に組み込まれ、デフォルトで有効になった。
+  `org.jetbrains.kotlin.android` プラグインはこれと両立しないため、**宣言しない**。
+  Kotlin のバージョンは AGP が決めたもの（上の表）をそのまま使う。
+- **jvmTarget**: 組み込み Kotlin では、`kotlin.compilerOptions.jvmTarget` のデフォルト値が
+  `android.compileOptions.targetCompatibility` になる。そこで app/build.gradle.kts では
+  `compileOptions` に 17 を指定し、Kotlin の jvmTarget を 17 にしている。
+
+**Gradle Wrapper の生成方法（T006）**
+
+ローカルの `~/.gradle/wrapper/dists/gradle-9.6.0-bin/` にあった Gradle 9.6.0 の配布物を一時的に使い、
+`gradle wrapper --gradle-version 9.6.0 --distribution-type bin` で生成した。
+
+**ビルドと依存の確認（T012）**
+
+- `./gradlew assembleDebug lint` は成功した。lint はエラー 0、警告 5。警告はどれも方針どおりなので直さない:
+  `OldTargetApi` と `GradleDependency`（compileSdk 37 がある。API 36 に固定する方針: Clarifications Q2）、
+  `AndroidGradlePluginVersion`（Gradle 9.8.1 がある。AGP 9.4 のデフォルトに合わせる）、
+  `MissingApplicationIcon` と `SetTextI18n`（リソースを作らない: FR-006）
+- `./gradlew :app:dependencies --configuration debugRuntimeClasspath` の結果、実行時の依存は
+  `org.jetbrains.kotlin:kotlin-stdlib:2.2.10` と、それが引き込む `org.jetbrains:annotations:13.0` だけ。AndroidX は入っていない
 
 ## Complexity Tracking
 

@@ -19,7 +19,7 @@
 
 ## Path Conventions
 
-- プロジェクトルート = `android-startup-internals-lab/`（`.specify/` や `specs/` があるディレクトリ。git のルートはその1つ上）
+- プロジェクトルート = `android-startup-internals-lab/`（`.specify/` や `specs/` があるディレクトリ。git のルートと同じ）
 - アプリのソース: `app/src/main/java/com/example/startuplab/`
 - 実験記録: `docs/experiments/001-app-process-observation/`
 - パッケージ名: `com.example.startuplab`。ログのタグ: `StartupLab`
@@ -30,13 +30,13 @@
 
 **Purpose**: 外部依存のない Gradle プロジェクトの骨組みを作る（research R2, R3）
 
-- [ ] T001 公式の互換表（Android Gradle Plugin のリリースノート、Kotlin と AGP の互換表）を見て、「compileSdk 36 と JDK 17 に対応する最新の安定版」の AGP・Gradle・Kotlin のバージョンを決める。決めたバージョンと参照した URL を、specs/001-app-process-observation/plan.md の「実装時に決めて追記すること」に書き足す
-- [ ] T002 settings.gradle.kts を作る。中身: `rootProject.name = "android-startup-internals-lab"`、`include(":app")`、pluginManagement のリポジトリ（google, mavenCentral, gradlePluginPortal）、dependencyResolutionManagement のリポジトリ（google, mavenCentral）。`repositoriesMode` は FAIL_ON_PROJECT_REPOS にする
-- [ ] T003 ルートの build.gradle.kts を作る。T001 で決めたバージョンで、`com.android.application` と Kotlin Android プラグインを `apply false` で宣言する
-- [ ] T004 [P] gradle.properties を作る。`org.gradle.jvmargs` と `kotlin.code.style=official` だけを書く。AndroidX は使わないので、`android.useAndroidX` は書かない（R2）
-- [ ] T005 [P] .gitignore を作る。`.gradle/`、`build/`、`app/build/`、`local.properties`、`.idea/`、`*.iml`、`.DS_Store` を除外する
-- [ ] T006 Gradle Wrapper を生成して、gradlew、gradlew.bat、gradle/wrapper/gradle-wrapper.jar、gradle/wrapper/gradle-wrapper.properties をリポジトリに含める。`distributionUrl` は T001 で決めたバージョンにする。Gradle 本体は入っていないので、一時的な方法（Android Studio に付属の Gradle、または公式配布物を一時的に使う）で生成する。どの方法で生成したかを plan.md に書き足す
-- [ ] T007 app/build.gradle.kts を作る。`namespace` と `applicationId` は `com.example.startuplab`。`compileSdk = 36`、`minSdk = 36`、`targetSdk = 36`、`versionCode = 1`、`versionName = "0.1"`。Kotlin の `jvmTarget` は 17。**`dependencies {}` は空にする**（AndroidX を含む外部ライブラリは入れない）
+- [X] T001 公式の互換表（Android Gradle Plugin のリリースノート、Kotlin と AGP の互換表）を見て、「compileSdk 36 と JDK 17 に対応する最新の安定版」の AGP・Gradle・Kotlin のバージョンを決める。決めたバージョンと参照した URL を、specs/001-app-process-observation/plan.md の「実装時に決めて追記すること」に書き足す
+- [X] T002 settings.gradle.kts を作る。中身: `rootProject.name = "android-startup-internals-lab"`、`include(":app")`、pluginManagement のリポジトリ（google, mavenCentral, gradlePluginPortal）、dependencyResolutionManagement のリポジトリ（google, mavenCentral）。`repositoriesMode` は FAIL_ON_PROJECT_REPOS にする
+- [X] T003 ルートの build.gradle.kts を作る。T001 で決めたバージョンで、`com.android.application` と Kotlin Android プラグインを `apply false` で宣言する
+- [X] T004 [P] gradle.properties を作る。`org.gradle.jvmargs` と `kotlin.code.style=official` だけを書く。AndroidX は使わないので、`android.useAndroidX` は書かない（R2）
+- [X] T005 [P] .gitignore を作る。`.gradle/`、`build/`、`app/build/`、`local.properties`、`.idea/`、`*.iml`、`.DS_Store` を除外する
+- [X] T006 Gradle Wrapper を生成して、gradlew、gradlew.bat、gradle/wrapper/gradle-wrapper.jar、gradle/wrapper/gradle-wrapper.properties をリポジトリに含める。`distributionUrl` は T001 で決めたバージョンにする。Gradle 本体は入っていないので、一時的な方法（Android Studio に付属の Gradle、または公式配布物を一時的に使う）で生成する。どの方法で生成したかを plan.md に書き足す
+- [X] T007 app/build.gradle.kts を作る。`namespace` と `applicationId` は `com.example.startuplab`。`compileSdk = 36`、`minSdk = 36`、`targetSdk = 36`、`versionCode = 1`、`versionName = "0.1"`。Kotlin の `jvmTarget` は 17。**`dependencies {}` は空にする**（AndroidX を含む外部ライブラリは入れない）
 
 ---
 
@@ -46,12 +46,12 @@
 
 **⚠️ CRITICAL**: このフェーズが終わるまで、ユーザーストーリーのタスクには進まない
 
-- [ ] T008 [P] app/src/main/java/com/example/startuplab/LifecycleLog.kt を作る。トップレベル関数 `logLifecycle(source: String, event: String, instance: Any)` を定義し、`android.util.Log.i("StartupLab", ...)` で contracts/log-format.md の形式どおりに出力する。形式: `source=<Application|Activity> event=<イベント名> pid=<10進> instance=<16進>`（pid は `android.os.Process.myPid()`、instance は `Integer.toHexString(System.identityHashCode(instance))`）。抽象化はこの関数1つだけにする（plan の Constitution Check V の補足）
-- [ ] T009 [P] app/src/main/java/com/example/startuplab/StartupLabApplication.kt を作る。`android.app.Application` を継承して、`onCreate()` で `super.onCreate()` だけを呼ぶ（ログを出す処理は T014 で入れる）
-- [ ] T010 [P] app/src/main/java/com/example/startuplab/MainActivity.kt を作る。`android.app.Activity` を直接継承する（AppCompatActivity は使わない）。`onCreate` では `super.onCreate()` を呼んだあと、コードで作った `TextView`（文字列は "StartupLab"）を `setContentView` に渡すだけにする。レイアウト XML とリソースは作らない（FR-006）
-- [ ] T011 app/src/main/AndroidManifest.xml を作る。`<application android:name=".StartupLabApplication" android:label="StartupLab">` の中に、`.MainActivity`（`android:exported="true"`、`MAIN` と `LAUNCHER` の intent-filter）だけを置く。provider、service、receiver は置かない（起動の流れに余計なものを混ぜないため。R2）
-- [ ] T012 `./gradlew assembleDebug lint` が成功することを確かめる。続けて `./gradlew :app:dependencies --configuration debugRuntimeClasspath` を実行し、実行時の依存が Kotlin 標準ライブラリ（とそれが引き込むもの）だけで、AndroidX がないことを確かめる。結果を plan.md の「実装時に決めて追記すること」に書く
-- [ ] T013 エミュレータ `Pixel_5_API_36` を起動して、C-ENV-1〜3（contracts/adb-commands.md）を実行し、docs/experiments/001-app-process-observation/environment.md を作る。data-model.md §5 の全フィールド（avdName, androidRelease, sdkInt, fingerprint, buildType, model, abi, alwaysFinishActivities, hostTools, aospRef）を埋める。`always_finish_activities` は `0` でなければならない。aospRef は「（ソースを読んだら書く）」として空けておく
+- [X] T008 [P] app/src/main/java/com/example/startuplab/LifecycleLog.kt を作る。トップレベル関数 `logLifecycle(source: String, event: String, instance: Any)` を定義し、`android.util.Log.i("StartupLab", ...)` で contracts/log-format.md の形式どおりに出力する。形式: `source=<Application|Activity> event=<イベント名> pid=<10進> instance=<16進>`（pid は `android.os.Process.myPid()`、instance は `Integer.toHexString(System.identityHashCode(instance))`）。抽象化はこの関数1つだけにする（plan の Constitution Check V の補足）
+- [X] T009 [P] app/src/main/java/com/example/startuplab/StartupLabApplication.kt を作る。`android.app.Application` を継承して、`onCreate()` で `super.onCreate()` だけを呼ぶ（ログを出す処理は T014 で入れる）
+- [X] T010 [P] app/src/main/java/com/example/startuplab/MainActivity.kt を作る。`android.app.Activity` を直接継承する（AppCompatActivity は使わない）。`onCreate` では `super.onCreate()` を呼んだあと、コードで作った `TextView`（文字列は "StartupLab"）を `setContentView` に渡すだけにする。レイアウト XML とリソースは作らない（FR-006）
+- [X] T011 app/src/main/AndroidManifest.xml を作る。`<application android:name=".StartupLabApplication" android:label="StartupLab">` の中に、`.MainActivity`（`android:exported="true"`、`MAIN` と `LAUNCHER` の intent-filter）だけを置く。provider、service、receiver は置かない（起動の流れに余計なものを混ぜないため。R2）
+- [X] T012 `./gradlew assembleDebug lint` が成功することを確かめる。続けて `./gradlew :app:dependencies --configuration debugRuntimeClasspath` を実行し、実行時の依存が Kotlin 標準ライブラリ（とそれが引き込むもの）だけで、AndroidX がないことを確かめる。結果を plan.md の「実装時に決めて追記すること」に書く
+- [X] T013 エミュレータ `Pixel_5_API_36` を起動して、C-ENV-1〜3（contracts/adb-commands.md）を実行し、docs/experiments/001-app-process-observation/environment.md を作る。data-model.md §5 の全フィールド（avdName, androidRelease, sdkInt, fingerprint, buildType, model, abi, alwaysFinishActivities, hostTools, aospRef）を埋める。`always_finish_activities` は `0` でなければならない。aospRef は「（ソースを読んだら書く）」として空けておく
 
 **Checkpoint**: アプリがビルド・インストールでき、タップで起動する。実験環境が記録されている
 
