@@ -59,36 +59,107 @@
 
 ## 観測結果
 
-### Trial 1 （YYYY-MM-DD HH:MM）
+時刻はホスト（Mac）の時計。ログの時刻はエミュレータの時計で、ホストより約15〜18秒遅れていた。
+C-LOG-1 は手順5（after-launch の後）で実行したので、最初の起動のログは記録の範囲に入っていない。
+
+### Trial 1 （2026-10-09 22:35）
 | step | pidof | PPID（親プロセス名） | 備考 |
 |------|-------|---------------------|------|
+| reset | — | — | C-OP-3 |
+| C-ENV-3 | — | — | `0` |
+| launch | — | — | `LaunchState: COLD` |
+| after-launch | 5701 | — | |
+| after-home | 5701 | — | HOME の約1秒後 |
+| after-home+30s | 5701 | — | |
+| return | — | — | `Warning: Activity not started, its current task has been brought to the front`、`LaunchState: HOT` |
+| after-return | 5701 | 464（zygote64） | |
 
 **本アプリのログ**（log-format.md の照合ルールを通ったもの）
 ```
-（ログをそのまま貼る）
+10-09 22:35:09.433  5701  5701 I StartupLab: source=Activity event=onPause pid=5701 instance=2937a2a
+10-09 22:35:10.528  5701  5701 I StartupLab: source=Activity event=onStop pid=5701 instance=2937a2a
+10-09 22:35:40.883  5701  5701 I StartupLab: source=Activity event=onRestart pid=5701 instance=2937a2a
+10-09 22:35:40.884  5701  5701 I StartupLab: source=Activity event=onStart pid=5701 instance=2937a2a
+10-09 22:35:40.885  5701  5701 I StartupLab: source=Activity event=onResume pid=5701 instance=2937a2a
 ```
 
 **OS のプロセス起動記録**
-- Start proc: （原文 / 出力なし）
-- am_proc_start: （原文 / 出力なし）
-- LaunchState: （値 / 出力なし）
-- PID の照合: （一致 / 不一致 / 判定できない）
+- Start proc: 出力なし
+- am_proc_start: 出力なし
+- LaunchState: 復帰（return）のとき `HOT`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
 
-**照合ルールで除いた行**: （なし / 内容）
+**照合ルールで除いた行**: なし
 
-**手順どおりにできなかったこと**: （なし / 内容）
+**手順どおりにできなかったこと**: なし
 
-### Trial 2 （YYYY-MM-DD HH:MM）
+### Trial 2 （2026-10-09 22:35）
+| step | pidof | PPID（親プロセス名） | 備考 |
+|------|-------|---------------------|------|
+| reset | — | — | C-OP-3 |
+| C-ENV-3 | — | — | `0` |
+| launch | — | — | `LaunchState: COLD` |
+| after-launch | 5770 | — | |
+| after-home | 5770 | — | HOME の約1秒後 |
+| after-home+30s | 5770 | — | |
+| return | — | — | `Warning: Activity not started, its current task has been brought to the front`、`LaunchState: HOT` |
+| after-return | 5770 | 464（zygote64） | |
 
-（Trial 1 と同じ形式で書く）
+**本アプリのログ**（log-format.md の照合ルールを通ったもの）
+```
+10-09 22:35:42.165  5770  5770 I StartupLab: source=Activity event=onPause pid=5770 instance=2937a2a
+10-09 22:35:43.276  5770  5770 I StartupLab: source=Activity event=onStop pid=5770 instance=2937a2a
+10-09 22:36:13.641  5770  5770 I StartupLab: source=Activity event=onRestart pid=5770 instance=2937a2a
+10-09 22:36:13.641  5770  5770 I StartupLab: source=Activity event=onStart pid=5770 instance=2937a2a
+10-09 22:36:13.646  5770  5770 I StartupLab: source=Activity event=onResume pid=5770 instance=2937a2a
+```
 
-### Trial 3 （YYYY-MM-DD HH:MM）
+**OS のプロセス起動記録**
+- Start proc: 出力なし
+- am_proc_start: 出力なし
+- LaunchState: 復帰（return）のとき `HOT`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
 
-（Trial 1 と同じ形式で書く）
+**照合ルールで除いた行**: なし
+
+**手順どおりにできなかったこと**: なし
+
+### Trial 3 （2026-10-09 22:36）
+| step | pidof | PPID（親プロセス名） | 備考 |
+|------|-------|---------------------|------|
+| reset | — | — | C-OP-3 |
+| C-ENV-3 | — | — | `0` |
+| launch | — | — | `LaunchState: COLD` |
+| after-launch | 5838 | — | |
+| after-home | 5838 | — | HOME の約1秒後 |
+| after-home+30s | 5838 | — | |
+| return | — | — | `Warning: Activity not started, its current task has been brought to the front`、`LaunchState: HOT` |
+| after-return | 5838 | 464（zygote64） | |
+
+**本アプリのログ**（log-format.md の照合ルールを通ったもの）
+```
+10-09 22:36:14.638  5838  5838 I StartupLab: source=Activity event=onPause pid=5838 instance=2937a2a
+10-09 22:36:15.703  5838  5838 I StartupLab: source=Activity event=onStop pid=5838 instance=2937a2a
+10-09 22:36:45.873  5838  5838 I StartupLab: source=Activity event=onRestart pid=5838 instance=2937a2a
+10-09 22:36:45.874  5838  5838 I StartupLab: source=Activity event=onStart pid=5838 instance=2937a2a
+10-09 22:36:45.878  5838  5838 I StartupLab: source=Activity event=onResume pid=5838 instance=2937a2a
+```
+
+**OS のプロセス起動記録**
+- Start proc: 出力なし
+- am_proc_start: 出力なし
+- LaunchState: 復帰（return）のとき `HOT`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
+
+**照合ルールで除いた行**: なし
+
+**手順どおりにできなかったこと**: なし
 
 ### 試行間の差
 
-（実験後に書く）
+- PID は試行ごとに違った（5701 / 5770 / 5838）が、どの試行でも1つの試行の中では最後まで同じ PID だった。
+- それ以外（ログの種類と順番、`LaunchState`、`instance` の値）は3回とも同じだった。
+- 3回とも、ホームにいる30秒の間にプロセスは消えなかった（spec Edge Cases の「別のケース」は起きなかった）。
 
 ## ソースコードで確認した事実
 

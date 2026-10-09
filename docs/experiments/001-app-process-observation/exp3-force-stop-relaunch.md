@@ -52,36 +52,142 @@
 
 ## 観測結果
 
-### Trial 1 （YYYY-MM-DD HH:MM）
+時刻はホスト（Mac）の時計。ログの時刻はエミュレータの時計で、ホストより約15〜18秒遅れていた。
+
+### Trial 1 （2026-10-09 22:37）
 | step | pidof | PPID（親プロセス名） | 備考 |
 |------|-------|---------------------|------|
+| C-ENV-3 | — | — | `0` |
+| launch | — | — | `Warning: Activity not started, intent has been delivered to currently running top-most instance.`、`LaunchState: UNKNOWN (0)` |
+| after-launch | 5838 | — | 前の手順で起動したプロセスがそのまま前面にあった |
+| force-stop | — | — | 出力なし |
+| after-force-stop | （空） | — | |
+| relaunch | — | — | `LaunchState: COLD` |
+| after-relaunch | 5919 | 464（zygote64） | |
 
 **本アプリのログ**（log-format.md の照合ルールを通ったもの）
 ```
-（ログをそのまま貼る）
+10-09 22:36:57.313  5919  5919 I StartupLab: source=Application event=onCreate pid=5919 instance=ab43fa3
+10-09 22:36:57.331  5919  5919 I StartupLab: source=Activity event=onCreate pid=5919 instance=2937a2a
+10-09 22:36:57.358  5919  5919 I StartupLab: source=Activity event=onStart pid=5919 instance=2937a2a
+10-09 22:36:57.370  5919  5919 I StartupLab: source=Activity event=onResume pid=5919 instance=2937a2a
 ```
 
 **OS のプロセス起動記録**
-- Start proc: （原文 / 出力なし）
-- am_proc_start: （原文 / 出力なし）
-- LaunchState: （値 / 出力なし）
-- PID の照合: （一致 / 不一致 / 判定できない）
+- Start proc: 
+  ```
+  10-09 22:36:57.154   681   741 I ActivityManager: Start proc 5919:com.example.startuplab/u0a223 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+  ```
+- am_proc_start: 
+  ```
+  10-09 22:36:57.154   681   741 I am_proc_start: [0,5919,10223,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+  ```
+- LaunchState: 再起動（relaunch）のとき `COLD`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
+- プロセス終了の記録（force-stop のとき）:
+  ```
+  10-09 22:36:56.963   681   697 I ActivityManager: Force stopping com.example.startuplab appid=10223 user=0: from pid 5908
+  10-09 22:36:56.967   681   697 I ActivityManager: Killing 5838:com.example.startuplab/u0a223 (adj 0): stop com.example.startuplab due to from pid 5908
+  10-09 22:36:56.967   681   697 I am_kill : [0,5838,com.example.startuplab,0,stop com.example.startuplab due to from pid 5908,131460]
+  ```
+- am_proc_died: 出力なし
+- `onPause`・`onStop`・`onDestroy`: 本アプリのログに出なかった
 
-**照合ルールで除いた行**: （なし / 内容）
+**照合ルールで除いた行**: なし
 
-**手順どおりにできなかったこと**: （なし / 内容）
+**手順どおりにできなかったこと**: なし。ただし、手順に開始前のリセットがないため、step=`launch` は毎回、前面にある既存のプロセスに届いた（Trial 1 は EXP-2 Trial 3 のプロセス 5838）。
 
-### Trial 2 （YYYY-MM-DD HH:MM）
+### Trial 2 （2026-10-09 22:37）
+| step | pidof | PPID（親プロセス名） | 備考 |
+|------|-------|---------------------|------|
+| C-ENV-3 | — | — | `0` |
+| launch | — | — | `Warning: Activity not started, intent has been delivered to currently running top-most instance.`、`LaunchState: UNKNOWN (0)` |
+| after-launch | 5919 | — | 前の手順で起動したプロセスがそのまま前面にあった |
+| force-stop | — | — | 出力なし |
+| after-force-stop | （空） | — | |
+| relaunch | — | — | `LaunchState: COLD` |
+| after-relaunch | 5979 | 464（zygote64） | |
 
-（Trial 1 と同じ形式で書く）
+**本アプリのログ**（log-format.md の照合ルールを通ったもの）
+```
+10-09 22:36:58.017  5979  5979 I StartupLab: source=Application event=onCreate pid=5979 instance=ab43fa3
+10-09 22:36:58.033  5979  5979 I StartupLab: source=Activity event=onCreate pid=5979 instance=2937a2a
+10-09 22:36:58.066  5979  5979 I StartupLab: source=Activity event=onStart pid=5979 instance=2937a2a
+10-09 22:36:58.072  5979  5979 I StartupLab: source=Activity event=onResume pid=5979 instance=2937a2a
+```
 
-### Trial 3 （YYYY-MM-DD HH:MM）
+**OS のプロセス起動記録**
+- Start proc: 
+  ```
+  10-09 22:36:57.875   681   741 I ActivityManager: Start proc 5979:com.example.startuplab/u0a223 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+  ```
+- am_proc_start: 
+  ```
+  10-09 22:36:57.875   681   741 I am_proc_start: [0,5979,10223,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+  ```
+- LaunchState: 再起動（relaunch）のとき `COLD`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
+- プロセス終了の記録（force-stop のとき）:
+  ```
+  10-09 22:36:57.772   681   995 I ActivityManager: Force stopping com.example.startuplab appid=10223 user=0: from pid 5968
+  10-09 22:36:57.773   681   995 I ActivityManager: Killing 5919:com.example.startuplab/u0a223 (adj 0): stop com.example.startuplab due to from pid 5968
+  10-09 22:36:57.776   681   995 I am_kill : [0,5919,com.example.startuplab,0,stop com.example.startuplab due to from pid 5968,130728]
+  ```
+- am_proc_died: 出力なし
+- `onPause`・`onStop`・`onDestroy`: 本アプリのログに出なかった
 
-（Trial 1 と同じ形式で書く）
+**照合ルールで除いた行**: なし
+
+**手順どおりにできなかったこと**: なし。ただし、手順に開始前のリセットがないため、step=`launch` は毎回、前面にある既存のプロセスに届いた（Trial 1 は EXP-2 Trial 3 のプロセス 5838）。
+
+### Trial 3 （2026-10-09 22:37）
+| step | pidof | PPID（親プロセス名） | 備考 |
+|------|-------|---------------------|------|
+| C-ENV-3 | — | — | `0` |
+| launch | — | — | `Warning: Activity not started, intent has been delivered to currently running top-most instance.`、`LaunchState: UNKNOWN (0)` |
+| after-launch | 5979 | — | 前の手順で起動したプロセスがそのまま前面にあった |
+| force-stop | — | — | 出力なし |
+| after-force-stop | （空） | — | |
+| relaunch | — | — | `LaunchState: COLD` |
+| after-relaunch | 6039 | 464（zygote64） | |
+
+**本アプリのログ**（log-format.md の照合ルールを通ったもの）
+```
+10-09 22:36:58.763  6039  6039 I StartupLab: source=Application event=onCreate pid=6039 instance=ab43fa3
+10-09 22:36:58.781  6039  6039 I StartupLab: source=Activity event=onCreate pid=6039 instance=2937a2a
+10-09 22:36:58.808  6039  6039 I StartupLab: source=Activity event=onStart pid=6039 instance=2937a2a
+10-09 22:36:58.814  6039  6039 I StartupLab: source=Activity event=onResume pid=6039 instance=2937a2a
+```
+
+**OS のプロセス起動記録**
+- Start proc: 
+  ```
+  10-09 22:36:58.633   681   741 I ActivityManager: Start proc 6039:com.example.startuplab/u0a223 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+  ```
+- am_proc_start: 
+  ```
+  10-09 22:36:58.633   681   741 I am_proc_start: [0,6039,10223,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+  ```
+- LaunchState: 再起動（relaunch）のとき `COLD`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
+- プロセス終了の記録（force-stop のとき）:
+  ```
+  10-09 22:36:58.519   681  2217 I ActivityManager: Force stopping com.example.startuplab appid=10223 user=0: from pid 6027
+  10-09 22:36:58.520   681  2217 I ActivityManager: Killing 5979:com.example.startuplab/u0a223 (adj 0): stop com.example.startuplab due to from pid 6027
+  10-09 22:36:58.520   681  2217 I am_kill : [0,5979,com.example.startuplab,0,stop com.example.startuplab due to from pid 6027,136888]
+  ```
+- am_proc_died: 出力なし
+- `onPause`・`onStop`・`onDestroy`: 本アプリのログに出なかった
+
+**照合ルールで除いた行**: なし
+
+**手順どおりにできなかったこと**: なし。ただし、手順に開始前のリセットがないため、step=`launch` は毎回、前面にある既存のプロセスに届いた（Trial 1 は EXP-2 Trial 3 のプロセス 5838）。
 
 ### 試行間の差
 
-（実験後に書く）
+- PID は試行ごとに違った。force-stop の前後で、PID は 5838 → 5919、5919 → 5979、5979 → 6039 と変わった。
+- `Force stopping ... from pid` の PID（5908 / 5968 / 6027）は試行ごとに違った。どのプロセスかは未確認。
+- それ以外（ログの種類と順番、`am_kill` が出て `am_proc_died` が出ないこと、`instance` の値）は3回とも同じだった。
 
 ## ソースコードで確認した事実
 

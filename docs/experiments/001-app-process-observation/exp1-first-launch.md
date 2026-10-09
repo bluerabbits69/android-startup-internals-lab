@@ -55,36 +55,115 @@ Application と Activity の onCreate がどの順で呼ばれるかを確かめ
 
 ## 観測結果
 
-### Trial 1 （YYYY-MM-DD HH:MM）
+時刻はホスト（Mac）の時計。ログの時刻はエミュレータの時計で、ホストより約15〜18秒遅れていた。
+
+### Trial 1 （2026-10-09 22:35）
 | step | pidof | PPID（親プロセス名） | 備考 |
 |------|-------|---------------------|------|
+| uninstall | — | — | `Success` |
+| install | — | — | `Success` |
+| C-ENV-3 | — | — | `0` |
+| before | （空） | — | |
+| launch | — | — | `Status: ok`、`LaunchState: COLD` |
+| after-launch | 5492 | 464（zygote64） | USER `u0_a221` |
 
 **本アプリのログ**（log-format.md の照合ルールを通ったもの）
 ```
-（ログをそのまま貼る）
+10-09 22:34:51.858  5492  5492 I StartupLab: source=Application event=onCreate pid=5492 instance=ab43fa3
+10-09 22:34:51.912  5492  5492 I StartupLab: source=Activity event=onCreate pid=5492 instance=2937a2a
+10-09 22:34:52.014  5492  5492 I StartupLab: source=Activity event=onStart pid=5492 instance=2937a2a
+10-09 22:34:52.042  5492  5492 I StartupLab: source=Activity event=onResume pid=5492 instance=2937a2a
 ```
 
 **OS のプロセス起動記録**
-- Start proc: （原文 / 出力なし）
-- am_proc_start: （原文 / 出力なし）
-- LaunchState: （値 / 出力なし）
-- PID の照合: （一致 / 不一致 / 判定できない）
+- Start proc: 
+  ```
+  10-09 22:34:51.474   681   741 I ActivityManager: Start proc 5492:com.example.startuplab/u0a221 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+  ```
+- am_proc_start: 
+  ```
+  10-09 22:34:51.474   681   741 I am_proc_start: [0,5492,10221,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+  ```
+- LaunchState: `COLD`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
 
-**照合ルールで除いた行**: （なし / 内容）
+**照合ルールで除いた行**: なし
 
-**手順どおりにできなかったこと**: （なし / 内容）
+**手順どおりにできなかったこと**: なし
 
-### Trial 2 （YYYY-MM-DD HH:MM）
+### Trial 2 （2026-10-09 22:35）
+| step | pidof | PPID（親プロセス名） | 備考 |
+|------|-------|---------------------|------|
+| uninstall | — | — | `Success` |
+| install | — | — | `Success` |
+| C-ENV-3 | — | — | `0` |
+| before | （空） | — | |
+| launch | — | — | `Status: ok`、`LaunchState: COLD` |
+| after-launch | 5580 | 464（zygote64） | USER `u0_a222` |
 
-（Trial 1 と同じ形式で書く）
+**本アプリのログ**（log-format.md の照合ルールを通ったもの）
+```
+10-09 22:34:54.024  5580  5580 I StartupLab: source=Application event=onCreate pid=5580 instance=ab43fa3
+10-09 22:34:54.052  5580  5580 I StartupLab: source=Activity event=onCreate pid=5580 instance=2937a2a
+10-09 22:34:54.104  5580  5580 I StartupLab: source=Activity event=onStart pid=5580 instance=2937a2a
+10-09 22:34:54.115  5580  5580 I StartupLab: source=Activity event=onResume pid=5580 instance=2937a2a
+```
 
-### Trial 3 （YYYY-MM-DD HH:MM）
+**OS のプロセス起動記録**
+- Start proc: 
+  ```
+  10-09 22:34:53.725   681   741 I ActivityManager: Start proc 5580:com.example.startuplab/u0a222 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+  ```
+- am_proc_start: 
+  ```
+  10-09 22:34:53.725   681   741 I am_proc_start: [0,5580,10222,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+  ```
+- LaunchState: `COLD`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
 
-（Trial 1 と同じ形式で書く）
+**照合ルールで除いた行**: なし
+
+**手順どおりにできなかったこと**: なし
+
+### Trial 3 （2026-10-09 22:35）
+| step | pidof | PPID（親プロセス名） | 備考 |
+|------|-------|---------------------|------|
+| uninstall | — | — | `Success` |
+| install | — | — | `Success` |
+| C-ENV-3 | — | — | `0` |
+| before | （空） | — | |
+| launch | — | — | `Status: ok`、`LaunchState: COLD` |
+| after-launch | 5652 | 464（zygote64） | USER `u0_a223` |
+
+**本アプリのログ**（log-format.md の照合ルールを通ったもの）
+```
+10-09 22:34:55.719  5652  5652 I StartupLab: source=Application event=onCreate pid=5652 instance=ab43fa3
+10-09 22:34:55.754  5652  5652 I StartupLab: source=Activity event=onCreate pid=5652 instance=2937a2a
+10-09 22:34:55.792  5652  5652 I StartupLab: source=Activity event=onStart pid=5652 instance=2937a2a
+10-09 22:34:55.803  5652  5652 I StartupLab: source=Activity event=onResume pid=5652 instance=2937a2a
+```
+
+**OS のプロセス起動記録**
+- Start proc: 
+  ```
+  10-09 22:34:55.502   681   741 I ActivityManager: Start proc 5652:com.example.startuplab/u0a223 for next-top-activity {com.example.startuplab/com.example.startuplab.MainActivity}
+  ```
+- am_proc_start: 
+  ```
+  10-09 22:34:55.502   681   741 I am_proc_start: [0,5652,10223,com.example.startuplab,next-top-activity,{com.example.startuplab/com.example.startuplab.MainActivity}]
+  ```
+- LaunchState: `COLD`
+- PID の照合: 一致（logcat の PID 列、`pid=`、`pidof` がすべて同じ値）
+
+**照合ルールで除いた行**: なし
+
+**手順どおりにできなかったこと**: なし
 
 ### 試行間の差
 
-（実験後に書く）
+- PID は試行ごとに違った（5492 / 5580 / 5652）。
+- UID も試行ごとに違った（10221 / 10222 / 10223。`ps` の USER は `u0_a221` / `u0_a222` / `u0_a223`）。原因は未検証。
+- それ以外（ログの種類と順番、`LaunchState: COLD`、親プロセス `zygote64`（PID 464）、`instance` の値）は3回とも同じだった。
 
 ## ソースコードで確認した事実
 
