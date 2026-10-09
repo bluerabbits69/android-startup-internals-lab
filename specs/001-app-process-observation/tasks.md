@@ -88,7 +88,7 @@
 - [X] T021 [US2] research.md R5 の [仮説]「ランチャー（Launcher3）は ACTION_MAIN、CATEGORY_LAUNCHER、`FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_RESET_TASK_IF_NEEDED` を付けた Intent で起動する」を、AOSP の Launcher3（Android 16 系のタグ）のソースで確かめる。参照したタグ・ファイル・メソッド・ソースコードの URL（タグを含む固定リンク。cs.android.com または android.googlesource.com）を adb-commands.md の C-OP-1 の source 欄に書き、research.md R5 の該当箇所を [AOSPで確認] か「誤り（正しくは〜）」に書き換える（Constitution III）
 - [X] T022 [US2] C-OP-2（HOME）と C-OP-3（force-stop）を実行し、出力と端末の変化を adb-commands.md に書く。C-OP-3 の後には C-PS-1 でプロセスが消えたことを確かめて、それも書く
 - [X] T023 [US2] C-ENV-1〜4、C-INS-1〜2、C-LOG-1〜3 を実行し、出力の例と端末の変化を adb-commands.md に書く。各オプション（`-d`, `-v threadtime`, `-b`, `-s`, `-r` など）の意味は、`adb help` と `adb logcat --help` を根拠にする
-- [ ] T024 [US2] 【学習者】adb-commands.md のすべてのコマンドの purpose 欄（OS に何を頼んだか）を自分の言葉で書く。AI の下書きを使った場合は、その内容を確かめてから承認する（US2 の受け入れシナリオ4、Constitution VII）
+- [X] T024 [US2] 【学習者】adb-commands.md のすべてのコマンドの purpose 欄（OS に何を頼んだか）を自分の言葉で書く。AI の下書きを使った場合は、その内容を確かめてから承認する（US2 の受け入れシナリオ4、Constitution VII）
 
 **Checkpoint**: ADB だけで操作でき、各コマンドを説明できる
 

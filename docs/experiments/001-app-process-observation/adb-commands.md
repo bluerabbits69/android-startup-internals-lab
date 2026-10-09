@@ -5,7 +5,7 @@
 
 パッケージ名: `PKG=com.example.startuplab` / 環境: [environment.md](./environment.md)
 
-- purpose 欄は学習者が書く（T024）。
+- purpose 欄は学習者の言葉（T024、2026-10-09）。C-OP-1 と C-OP-3 は学習者が答えたもの、それ以外は AI の下書きを学習者が確認して承認したもの。
 - 出力は 2026-10-09 に実行したときの原文。PID などの値は実行ごとに変わる。
 - 「help」は、端末上の各コマンドのヘルプ（`adb help`、`adb logcat --help`、`adb shell am help`、
   `adb shell settings help`、`adb shell input`、`adb shell pidof --help`、`adb shell ps --help`）を指す。
@@ -17,7 +17,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb devices -l` |
-| purpose | |
+| purpose | パソコンにつながっている端末の一覧を見る |
 | options | `-l`: 詳しい情報（product, model, device, transport_id）も表示する |
 | output | `emulator-5554 device product:sdk_gphone64_arm64 model:sdk_gphone64_arm64 device:emu64a transport_id:1` |
 | effect | 端末の変化はない（ホスト側で接続中の端末を一覧にするだけ） |
@@ -28,7 +28,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell getprop ro.build.version.release` / `ro.build.version.sdk` / `ro.build.fingerprint` / `ro.build.type` / `ro.product.model` / `ro.product.cpu.abi` |
-| purpose | |
+| purpose | 端末の Android のバージョンや機種などの情報を読む |
 | options | 引数はシステムプロパティの名前。`adb shell` は端末上でコマンドを実行する |
 | output | `16` / `36` / `google/sdk_gphone64_arm64/emu64a:16/BE2A.250530.026.F3/13894323:userdebug/dev-keys` / `userdebug` / `sdk_gphone64_arm64` / `arm64-v8a` |
 | effect | 端末の変化はない（値を読むだけ） |
@@ -39,7 +39,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell settings get global always_finish_activities` |
-| purpose | |
+| purpose | 「アクティビティを保持しない」設定がオフかどうかを確かめる |
 | options | `get NAMESPACE KEY`: 名前空間 `global` のキー `always_finish_activities` の値を読む |
 | output | エミュレータ起動直後は `null`（キーがまだない）。C-ENV-4 の後は `0` |
 | effect | 端末の変化はない（値を読むだけ） |
@@ -50,7 +50,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell settings put global always_finish_activities 0` |
-| purpose | |
+| purpose | 「アクティビティを保持しない」設定をオフにする |
 | options | `put NAMESPACE KEY VALUE`: 名前空間 `global` のキーに値 `0` を書く |
 | output | 出力なし |
 | effect | C-ENV-3 の値が `null` から `0` になった（environment.md の補足を参照） |
@@ -63,7 +63,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb install -r app/build/outputs/apk/debug/app-debug.apk` |
-| purpose | |
+| purpose | アプリを端末にインストールする（入っていれば上書きする） |
 | options | `-r`: すでに入っているアプリを置き換える |
 | output | `Performing Streamed Install` → `Success` |
 | effect | `pm list packages com.example.startuplab` に `package:com.example.startuplab` が出るようになった。インストール直後の `dumpsys package` は `stopped=true` |
@@ -74,7 +74,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb uninstall $PKG` |
-| purpose | |
+| purpose | アプリを端末から削除する |
 | options | オプションなし（`-k` を付けるとデータとキャッシュを残すが、使わない） |
 | output | `Success` |
 | effect | `pm list packages com.example.startuplab` の出力が空になった |
@@ -87,7 +87,7 @@
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n $PKG/.MainActivity` |
-| purpose | |
+| purpose | アプリを起動するためのコマンド |
 | options | `-W`: 起動の完了（最初の表示）まで待つ。`-a`: Intent の action。`-c`: Intent の category。`-n`: 起動するコンポーネント名。`-f`: Intent のフラグ（数値）。`0x10200000` = `0x10000000`（`FLAG_ACTIVITY_NEW_TASK`）\| `0x00200000`（`FLAG_ACTIVITY_RESET_TASK_IF_NEEDED`） |
 | output | 下の「C-OP-1 の出力」を参照 |
 | effect | プロセスがないとき: 新しいプロセスができ、`dumpsys activity activities` の `topResumedActivity` が `com.example.startuplab/.MainActivity` になった。前面にあるとき: PID も前面の Activity も変わらなかった |
@@ -129,7 +129,7 @@ Complete
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell input keyevent KEYCODE_HOME` |
-| purpose | |
+| purpose | HOME ボタンを押して、ホーム画面に戻る |
 | options | `keyevent <key code number or name>`: キー入力を送る。`KEYCODE_HOME` は HOME キー |
 | output | 出力なし（終了コード 0） |
 | effect | MainActivity が前面のときに実行すると、`topResumedActivity` がランチャー（`com.google.android.apps.nexuslauncher/.NexusLauncherActivity`）に変わった。`pidof` は `4847` のまま |
@@ -140,7 +140,7 @@ Complete
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell am force-stop $PKG` |
-| purpose | |
+| purpose | 強制終了させるコマンド |
 | options | 引数はパッケージ名 |
 | output | 出力なし（終了コード 0） |
 | effect | アプリがバックグラウンドにあるとき（C-OP-2 の後）に実行した。直後の C-PS-1 で `pidof` が空になった（プロセスが消えた）。`dumpsys package` は `stopped=true` になった |
@@ -153,7 +153,7 @@ Complete
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell pidof $PKG` |
-| purpose | |
+| purpose | アプリのプロセスが動いているかと、その PID を調べる |
 | options | 引数はプロセス名。オプションなし |
 | output | プロセスがあるとき: `4847` のように PID だけ。ないとき: 何も出ない |
 | effect | 端末の変化はない（見るだけ） |
@@ -164,7 +164,7 @@ Complete
 | 欄 | 内容 |
 |----|------|
 | command | `adb shell ps -A -o PID,PPID,USER,NAME` から本アプリの行と、その PPID の行を抜き出す |
-| purpose | |
+| purpose | プロセスの一覧から、アプリのプロセスとその親プロセスを調べる |
 | options | `-A`: すべてのプロセス。`-o`: 表示する列を指定する |
 | output | （T025 で書く） |
 | effect | 端末の変化はない（見るだけ） |
@@ -177,7 +177,7 @@ Complete
 | 欄 | 内容 |
 |----|------|
 | command | `adb logcat -b main,system,events -c`（2026-10-09 に `adb logcat -c` から変更。理由は下の表） |
-| purpose | |
+| purpose | 実験を始める前に、ログを空にする |
 | options | `-b main,system,events`: 消すバッファを指定する。`-c`: ログを消して終了する |
 | output | 出力なし（終了コード 0） |
 | effect | 3つのバッファがすべて 0 行になった。変更前の `adb logcat -c` では **events バッファは消えなかった**（下の表） |
@@ -200,7 +200,7 @@ C-LOG-3 は events バッファも読むので、このままでは前の試行�
 | 欄 | 内容 |
 |----|------|
 | command | `adb logcat -d -v threadtime -s StartupLab:I` |
-| purpose | |
+| purpose | 自分のアプリが出したログだけを見る |
 | options | `-d`: 今あるログを出力して終了する（待ち続けない）。`-v threadtime`: 日付・時刻・PID・TID・優先度・タグを付ける。`-s`: 指定しないタグは出さない。`StartupLab:I`: タグ `StartupLab` の INFO 以上を出す |
 | output | 下を参照 |
 | effect | 端末の変化はない（読むだけ） |
@@ -219,7 +219,7 @@ C-LOG-3 は events バッファも読むので、このままでは前の試行�
 | 欄 | 内容 |
 |----|------|
 | command | `adb logcat -d -v threadtime -b main,system,events -s StartupLab:I ActivityManager:I am_proc_start:I am_proc_died:I am_kill:I` |
-| purpose | |
+| purpose | 自分のアプリのログと、OS のプロセス起動・終了の記録を、まとめて時間順に見る |
 | options | `-b main,system,events`: 読むバッファを指定する（選べるのは `main system radio events crash default all`）。ほかは C-LOG-2 と同じ。タグを並べると、そのタグだけを出す |
 | output | 下を参照（本アプリに関係する行だけを抜き出した） |
 | effect | 端末の変化はない（読むだけ） |
